@@ -1,0 +1,138 @@
+{"frames": {
+
+"alien 1.png":
+{
+	"frame": {"x":1,"y":486,"w":189,"h":216},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":189,"h":216},
+	"sourceSize": {"w":189,"h":216}
+},
+"alien 2.png":
+{
+	"frame": {"x":219,"y":504,"w":225,"h":233},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":225,"h":233},
+	"sourceSize": {"w":225,"h":233}
+},
+"alien 3.png":
+{
+	"frame": {"x":454,"y":550,"w":262,"h":241},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":262,"h":241},
+	"sourceSize": {"w":262,"h":241}
+},
+"broken 1.png":
+{
+	"frame": {"x":175,"y":308,"w":186,"h":176},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":186,"h":176},
+	"sourceSize": {"w":186,"h":176}
+},
+"broken 2.png":
+{
+	"frame": {"x":1,"y":1,"w":135,"h":219},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":135,"h":219},
+	"sourceSize": {"w":135,"h":219}
+},
+"broken 3.png":
+{
+	"frame": {"x":563,"y":198,"w":170,"h":172},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":170,"h":172},
+	"sourceSize": {"w":170,"h":172}
+},
+"broken 4.png":
+{
+	"frame": {"x":443,"y":1,"w":153,"h":195},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":153,"h":195},
+	"sourceSize": {"w":153,"h":195}
+},
+"meteor 1.png":
+{
+	"frame": {"x":551,"y":370,"w":178,"h":189},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":178,"h":189},
+	"sourceSize": {"w":178,"h":189}
+},
+"meteor 2.png":
+{
+	"frame": {"x":194,"y":138,"w":168,"h":176},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":168,"h":176},
+	"sourceSize": {"w":168,"h":176}
+},
+"meteor 3.png":
+{
+	"frame": {"x":1,"y":138,"w":191,"h":166},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":191,"h":166},
+	"sourceSize": {"w":191,"h":166}
+},
+"meteor 4.png":
+{
+	"frame": {"x":372,"y":156,"w":168,"h":189},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":168,"h":189},
+	"sourceSize": {"w":168,"h":189}
+},
+"normal 1.png":
+{
+	"frame": {"x":363,"y":326,"w":186,"h":176},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":186,"h":176},
+	"sourceSize": {"w":186,"h":176}
+},
+"normal 2.png":
+{
+	"frame": {"x":222,"y":1,"w":135,"h":219},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":135,"h":219},
+	"sourceSize": {"w":135,"h":219}
+},
+"normal 3.png":
+{
+	"frame": {"x":1,"y":306,"w":170,"h":172},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":170,"h":172},
+	"sourceSize": {"w":170,"h":172}
+},
+"normal 4.png":
+{
+	"frame": {"x":640,"y":1,"w":153,"h":195},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":153,"h":195},
+	"sourceSize": {"w":153,"h":195}
+}},
+"animations": {
+	"alien ": ["alien 1.png","alien 2.png","alien 3.png"],
+	"broken ": ["broken 1.png","broken 2.png","broken 3.png","broken 4.png"],
+	"meteor ": ["meteor 1.png","meteor 2.png","meteor 3.png","meteor 4.png"],
+	"normal ": ["normal 1.png","normal 2.png","normal 3.png","normal 4.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "game4-atlas.png",
+	"format": "RGBA8888",
+	"size": {"w":794,"h":794},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7c54ec5cc8daa0e976ea644fe8ac642b:88954264821b35352a56ef3f3b3d2586:8247ef59edf3956ee69a831b878476b7$"
+}
+}

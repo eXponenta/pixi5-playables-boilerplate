@@ -1,0 +1,4 @@
+{
+    "tslint.exclude": "./templates/",
+    "editor.fontLigatures": true
+}

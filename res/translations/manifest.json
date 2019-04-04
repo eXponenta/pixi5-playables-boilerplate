@@ -1,0 +1,18 @@
+{
+    "en_US" : {
+        "url" : "en_US.json",
+        "name" :  "English"
+    },
+    "en" : {
+        "url" : "en_US.json",
+        "name" :  "English"
+    },
+    "ru_RU" : {
+        "url" : "ru_RU.json",
+        "name" : "Russian"
+    },
+    "ko_KR" : {
+        "url" : "ko_KR.json",
+        "name" : "Korean"
+    }
+}

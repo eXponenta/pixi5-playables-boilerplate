@@ -1,0 +1,153 @@
+
+Game Character.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Body
+  rotate: true
+  xy: 581, 60
+  size: 83, 102
+  orig: 83, 102
+  offset: 0, 0
+  index: -1
+Eyebrow Left
+  rotate: false
+  xy: 884, 228
+  size: 38, 26
+  orig: 38, 26
+  offset: 0, 0
+  index: -1
+Eyebrow Right
+  rotate: false
+  xy: 178, 22
+  size: 38, 23
+  orig: 38, 23
+  offset: 0, 0
+  index: -1
+Eyes
+  rotate: false
+  xy: 2, 5
+  size: 76, 40
+  orig: 76, 40
+  offset: 0, 0
+  index: -1
+Eyes for hurt and win
+  rotate: false
+  xy: 702, 214
+  size: 79, 40
+  orig: 79, 40
+  offset: 0, 0
+  index: -1
+Face
+  rotate: false
+  xy: 581, 145
+  size: 119, 109
+  orig: 119, 109
+  offset: 0, 0
+  index: -1
+Face on pupil
+  rotate: false
+  xy: 299, 2
+  size: 94, 54
+  orig: 94, 54
+  offset: 0, 0
+  index: -1
+Hand Left
+  rotate: true
+  xy: 395, 14
+  size: 42, 64
+  orig: 42, 64
+  offset: 0, 0
+  index: -1
+Hand Right
+  rotate: false
+  xy: 702, 150
+  size: 44, 62
+  orig: 44, 62
+  offset: 0, 0
+  index: -1
+Hurt mouth
+  rotate: false
+  xy: 515, 25
+  size: 37, 31
+  orig: 37, 31
+  offset: 0, 0
+  index: -1
+Leg Left
+  rotate: false
+  xy: 80, 11
+  size: 52, 34
+  orig: 52, 34
+  offset: 0, 0
+  index: -1
+Leg Right
+  rotate: false
+  xy: 461, 22
+  size: 52, 34
+  orig: 52, 34
+  offset: 0, 0
+  index: -1
+Lose mouth
+  rotate: false
+  xy: 924, 234
+  size: 32, 20
+  orig: 32, 20
+  offset: 0, 0
+  index: -1
+Nose
+  rotate: false
+  xy: 841, 224
+  size: 41, 30
+  orig: 41, 30
+  offset: 0, 0
+  index: -1
+Peace mouth
+  rotate: false
+  xy: 134, 17
+  size: 42, 28
+  orig: 42, 28
+  offset: 0, 0
+  index: -1
+Pupil Left
+  rotate: false
+  xy: 554, 31
+  size: 20, 25
+  orig: 20, 25
+  offset: 0, 0
+  index: -1
+Pupil Right
+  rotate: false
+  xy: 554, 31
+  size: 20, 25
+  orig: 20, 25
+  offset: 0, 0
+  index: -1
+Waiting mouth
+  rotate: true
+  xy: 748, 156
+  size: 56, 25
+  orig: 56, 25
+  offset: 0, 0
+  index: -1
+Win mouth
+  rotate: false
+  xy: 783, 219
+  size: 56, 35
+  orig: 56, 35
+  offset: 0, 0
+  index: -1
+basket back
+  rotate: false
+  xy: 299, 58
+  size: 280, 196
+  orig: 280, 196
+  offset: 0, 0
+  index: -1
+basket front
+  rotate: false
+  xy: 2, 47
+  size: 295, 207
+  orig: 295, 207
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,109 @@
+{
+	"ANY": {
+		"endings": [
+			"We are a great team!\nFurther will be more fun!"
+		],
+		"falling": [
+			"Oh, bad luck"
+		],
+		"levels": [
+			"Level {current}/{total}"
+		],
+		"levels_button": [
+			"Level 1: Easy",
+			"Level 2: Medium",
+			"Level 3: Hard"
+		]
+	},
+	"Balance": {
+		"falling_3times": [
+			"Move the books left and right, tap on them to rotate, tap two times to make the book fall faster. But be very careful, the higher the tower, the harder it is to keep balance!"
+		],
+		"hello": [
+			"You are already here?\n I was in a hurry to get to this particular library.\n Here is a very rare key of  librarian.",
+			"To get  it, I need to build a tower of books and climb it to the top shelf.\n I can't do it without you!"
+		],
+		"progress": [
+			"Books {current}/{total} passed"
+		]
+	},
+	"Catcher": {
+		"falling_3times": [
+			"Collect together with Neeo objects falling from space trees.\nSee that they fall into the basket.",
+			"If suddenly the object falls to the ground - Neeo can stumble over it and scatter all his treasures,\nwhich it will immediately carry away with the wind.\nAnd beware of all the trash!"
+		],
+		"hello": [
+			"You are just in time!\nHello! I really need your help, see how much good\nstuff there is today falling from these trees,\n we can get rich! No time to talk,",
+			"we have a very high probability of catching a rare key, I can feel it!"
+		],
+		"progress": [
+			"Gems {current}/{total}"
+		]
+	},
+	"Frogger": {
+		"falling_3times": [
+			"You can only cross the river riding a turtle or a log. Beware of dreams, they will not pity you!\nDo your best and don’t give up!"
+		],
+		"hello": [
+			"Glad to see you! Just look at this mighty river. There are so many dreams in it! But now is not the time to sleep.\n Together we need to get the key from the opposite bank.\n",
+			"I wonder how did it appear there? Although it does not matter, becouse now you and I will get it! Have a cup of coffee and go ahead to conquer the River of Dreams!"
+		],
+		"progress": [
+			"River {current}/{total} passed"
+		]
+	},
+	"Maze": {
+		"hello": [
+			"Are you here? Can you see me?\nLook, look i illuminate you with a flashlight.\nHelp me get through this labyrinth, I'm a little afraid of the dark, so I really need your support!",
+			"Together we can get to the exit and find the most beautiful key in this universe!",
+			"Hint!\nMove Neeo through the maze, collect all the gems and find the way out!"
+		],
+		"progress": [
+			"Gems {current}/{total}"
+		],
+		"falling_3times" :[
+			"Beware of the dark and the ghost!\nCollect the gems to light your way!"
+		]
+	},
+	"Tower": {
+		"falling_3times": [
+			"Beware of the traps and guards of the tower - they are everywhere. I warn you - the platforms seem durable, but in fact they will speed up or slow you down, or even worse, they will collapse."
+		],
+		"hello": [
+			"Hello! Are you ready to conquer new heights?\n Today we will do it together. There, above, behind the clouds is a chest with treasure and a precious key.\n But first we have to be painstaking.\n",
+			"Click on the buttons, and watch me not to fall!"
+		],
+		"hello_pc": [
+			"Hello! Are you ready to conquer new heights?\n Today we will do it together. There, above, behind the clouds is a chest with treasure and a precious key.",
+			"But first we have to be painstaking.\nClick on the buttons left and right, and watch me not to fall!"
+		],
+		"progress": [
+			"Platform {current}/{total} completed"
+		]
+	},
+	"Twofold": {
+		"falling": [
+			"You can do it better!"
+		],
+		"hello": [
+			"Hi, are you still awake?\nSee how bright the stars are!\nBut these are not just a stars, this is a star puzzle.",
+			"You have to help me figure it out before dawn,\notherwise we will never be able to get the star key again!",
+			"Hint!\nConnect the stars and planets to get the specified number of points.\nYou can move the stars to empty spaces to get a longer line.",
+			"Be smart, and do not hesitate, the dawn is very soon!"
+		],
+		"progress": [
+			"Planets {current}/{total} passed"
+		]
+	},
+	"Pong": {
+		"falling_3times": [
+			"Move your hands to beat the stones,\ndefeat the ice penguin three times to smash the block of ice and get the treasure trove! And watch your forehead!"
+		],
+		"hello": [
+			"Hello!\nHurry, I need your help! Inside this block of ice is the key! But this penguin considers it his treasure.\nWe need to teach him a lesson and pick up the key. Faster, prepare the snowballs!"
+		],
+		"progress": [
+			"Winnings {current}/{total}"
+		]
+	}
+}
