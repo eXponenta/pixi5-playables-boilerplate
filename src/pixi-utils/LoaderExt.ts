@@ -20,7 +20,8 @@ export default function() {
 
 	PIXI.Loader.prototype.loadAsync = async function() {
 		return new Promise((res, rej) => {
-			this.load( (l : PIXI.Loader, r: PIXI.IResourceDictionary) => res(r));
+			this.onError.add( (e: any, l : PIXI.Loader, r: PIXI.IResourceDictionary) => rej(e) )
+			this.load( (l : PIXI.Loader, r: PIXI.IResourceDictionary) => res(r) );
 		});
 	} 
 }
