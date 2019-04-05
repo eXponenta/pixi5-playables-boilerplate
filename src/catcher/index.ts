@@ -137,7 +137,8 @@ export class Catcher extends BaseGame implements IUIListener{
 	preload(): PIXI.Loader {
 		
 		//@ts-ignore
-		this.loader.add(Object.values(Assets.Assets));
+		//InlineLoader.parse (Object.values(Assets.Assets));
+
 		return super.preload();
 	}
 

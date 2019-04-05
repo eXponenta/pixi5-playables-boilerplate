@@ -10,10 +10,12 @@ import { UiManager } from "./shared/ui/UiManager";
 import { GameApiInterface, FakeGameApi } from './GameAPI';
 import { Multilang } from "./shared/Multilang";
 
+import Resources from "./inline/resources";
+
 //games
 import { Catcher } from './catcher/index';
 import { SoundGrouper } from './shared/Sound';
-import { InlinedResources } from "./InlineLoader";
+import { InlineLoader} from "./InlineLoader";
 
 
 export class App extends Application {
@@ -79,12 +81,13 @@ export class App extends Application {
 
  	async load() {
 		
+		this.loader = new InlineLoader(Resources);
 		//@ts-ignore
 		const ui_asset = Assets.AssetsTranslated[this.lang] || {};
 
 		//@ts-ignore 
-		this.resources = await InlinedResources.parse(Object.values( {...Assets.Assets, ...ui_asset}));
-		console.log(this.resources);
+		this.loader.add(Object.values( {...Assets.Assets, ...ui_asset}));
+		//console.log(this.resources);
 
 		// на всякий случай такой кастыль
 		//this.loader.baseUrl = Assets.BaseDir;
@@ -93,9 +96,9 @@ export class App extends Application {
 	
 		//this.loader.add("mainfest", Config.Translations);
 
-		//this.loader.load(() => {
-		this.init();
-		//});
+		this.loader.load(() => {
+			this.init();
+		});
 	}
 
 	private init() {
