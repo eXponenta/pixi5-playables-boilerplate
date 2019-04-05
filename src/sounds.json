@@ -1,10 +1,11 @@
 {
 	"preloadAny": true,
 	"preloads": ["main_theme"],
-	"baseDir": "/snd/",
+	"baseDir": "/snd",
 	"list": [
 		"/Any/lose.mp3",
 		"/Any/next_level.mp3",
+		"/Any/stuckout.mp3",
 		"/Catcher/crumble.mp3",
 		"/Catcher/catch.mp3"
 	]

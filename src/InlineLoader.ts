@@ -64,6 +64,8 @@ export class InlineLoader extends PIXI.Loader {
 		let [name, url, options, cb] = params;
 		// special case of an array of objects or urls
 		if (Array.isArray(name)) {
+			if(typeof name[0] == "string")
+				return name.map( e => ({name: e, url : e}));
 			return name;
 		}
 
@@ -95,7 +97,7 @@ export class InlineLoader extends PIXI.Loader {
 		return [
 			{
 				name,
-				url,
+				url : url || name,
 				options,
 				callback: cb
 			}

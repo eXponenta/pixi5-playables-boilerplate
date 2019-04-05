@@ -9,7 +9,9 @@ const PLUGIN_NAME = "b64inliner";
 const mimes = {
 	json: { mime: "application/json" },
 	atlas: { mime: "text/plain" },
-	mp3: { mime: "audio/mpeg", encode: true },
+	mp3: { mime: "audio/mp3", encode: true },
+	wav: { mime: "audio/wav", encode: true },
+	ogg: { mime: "audio/ogg", encode: true },
 	jpeg: { mime: "image/jpeg", encode: true },
 	jpg: { mime: "image/jpeg", encode: true },
 	png: { mime: "image/png", encode: true }

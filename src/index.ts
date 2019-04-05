@@ -1,6 +1,7 @@
 import HookPixi from "./pixi-utils";
 	HookPixi();
 
+import Sounds from "./sounds.json";
 import TWEEN from "@tweenjs/tween.js";
 import { Application } from "./Application";
 import { Config } from "./shared/Config";
@@ -87,11 +88,13 @@ export class App extends Application {
 
 		//@ts-ignore 
 		this.loader.add(Object.values( {...Assets.Assets, ...ui_asset}));
+		this.loader.add(Sounds.list.map(e=>  Sounds.baseDir + e ));
+
 		//console.log(this.resources);
 
 		// на всякий случай такой кастыль
 		//this.loader.baseUrl = Assets.BaseDir;
-		SoundGrouper.createManager("Any");
+		SoundGrouper.createManager("Any", this.loader.resources);
 		
 	
 		this.loader.add("manifest", Config.Translations);

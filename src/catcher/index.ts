@@ -58,7 +58,7 @@ export class Catcher extends BaseGame implements IUIListener{
 
 	init(app: App){
 		this.app = app;
-		this.sounds = SoundGrouper.createManager("Catcher");
+		this.sounds = SoundGrouper.createManager("Catcher", this.loader.resources);
 		this.sounds.Play("main_theme2", {loop: true, volume: .25});
 		
 		this.gameState.on("enter", this.onStateEnter, this);

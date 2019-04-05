@@ -17,7 +17,8 @@ export interface IPlayingParams {
 export class SoundGrouper {
 	static managers: { [key: string]: SoundManager } = {};
 
-	static createManager(groupId: string) {
+	static createManager(groupId: string, res: PIXI.IResourceDictionary) {
+
 		const manager = new SoundManager();
 		this.managers[groupId] = manager;
 
@@ -38,13 +39,13 @@ export class SoundGrouper {
 				const preload = Sounds.preloads.filter(e => name.indexOf(e) > -1).length > 0;
 				return {
 					name: name,
-					src: `${baseDir}/${Sounds.baseDir}/${e}`,
+					src: `/${Sounds.baseDir}/${e}`.replace(/\/\/+/g, '/'),
 					preload: Sounds.preloadAny || preload
 				} as ISound;
 			});
 
 
-		manager.preload(assets || []);
+		manager.preload(assets || [], res);
 		return manager;
 	}
 }
@@ -56,11 +57,20 @@ export class SoundManager extends PIXI.utils.EventEmitter {
 	private _loaded = 0;
 	private _errors = 0;
 
-	preload(manifest: ISound[]) {
-		const total = manifest.length;
+	preload(manifest: ISound[], res?: PIXI.IResourceDictionary) {
 		for (const etry of manifest) {
+			
+			let srcOrBlob = etry.src;
+			if(res){
+				if(!res[etry.src]){
+					console.warn("Sound can't found in resources", etry.src);
+					continue;
+				}
+				srcOrBlob = res[etry.src].url;
+			}
+
 			const sound = new Howl({
-				src: etry.src,
+				src:  [srcOrBlob],
 				preload: etry.preload
 			});
 
@@ -89,7 +99,6 @@ export class SoundManager extends PIXI.utils.EventEmitter {
 	}
 
 	Play(name: string, params: IPlayingParams = {}): Howl {
-		console.log("Request sound:", name);
 		const s = this.sounds[name];
 		if (s) {
 			if (s.state() == "unloaded") {
