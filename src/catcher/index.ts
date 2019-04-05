@@ -54,8 +54,6 @@ export class Catcher extends BaseGame implements IUIListener{
 		this.stage = new PIXI.Container();
 		this.physics = new PIXI.Container();
 		this.physics.sortableChildren = true;
-
-		this.loader = new PIXI.Loader(Assets.BaseDir);
 	}
 
 	init(app: App){
@@ -134,12 +132,16 @@ export class Catcher extends BaseGame implements IUIListener{
 		super.start();
 	}
 
-	preload(): PIXI.Loader {
-		
-		//@ts-ignore
-		//InlineLoader.parse (Object.values(Assets.Assets));
+	preload(loader: PIXI.Loader): PIXI.Loader {
+		const _l = super.preload(loader);
 
-		return super.preload();
+		const assets = Object.values(Assets.Assets).map( e => {
+			e.url = Assets.BaseDir + e.url;
+			return e;
+		});
+
+		_l.add(assets);
+		return _l;
 	}
 
 	reset() {

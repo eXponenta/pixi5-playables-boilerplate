@@ -10,6 +10,36 @@ export interface BundledResources extends PIXI.LoaderResource {
 }
 
 export type IBundle = { [key: string]: IPacket };
+const MIME = {
+	JSON : "application/json",
+	TEXT : "plain/text"
+}
+//path pixi loader
+const RAW_TEXT_TYPE = 666;
+
+//@ts-ignore
+const _orig = PIXI.LoaderResource.prototype._loadXhr;
+
+//@ts-ignore
+PIXI.LoaderResource.prototype._loadXhr = function() {
+	const type = this._determineXhrType();
+	if(this.loadType == RAW_TEXT_TYPE){
+
+		let text:string = this.metadata.data || this.url;
+		text = text.replace(/data:(.*?)\,/g, "");
+
+		if(type == "json") {
+			this.data = JSON.parse(unescape(text))
+			this.type = PIXI.LoaderResource.TYPE.JSON;
+		} else {
+			this.type = PIXI.LoaderResource.TYPE.TEXT;
+			this.data = text;
+		}
+
+		return this.complete();
+	}
+	_orig.call(this);
+}
 
 const unescape = (text: string) => {
 	return text.replace(/\'/g, "'").replace(/\n/g, "\\n");
@@ -21,9 +51,9 @@ const trimPath = (path: string) => {
 	return path;
 };
 
-const basePath = (path: string) =>{
+const basePath = (path: string) => {
 	return path.substr(0, path.lastIndexOf("/") + 1);
-}
+};
 
 export class InlineLoader extends PIXI.Loader {
 	constructor(public bundle: IBundle, baseUrl?: string, concurrency?: number) {
@@ -31,11 +61,10 @@ export class InlineLoader extends PIXI.Loader {
 	}
 
 	_unpackParams(...params: any[]) {
-        
-        let [name, url, options, cb] = params;
+		let [name, url, options, cb] = params;
 		// special case of an array of objects or urls
 		if (Array.isArray(name)) {
-            return name;
+			return name;
 		}
 
 		// if an object is passed instead of params
@@ -62,42 +91,89 @@ export class InlineLoader extends PIXI.Loader {
 		if (typeof options === "function") {
 			cb = options;
 			options = null;
-        }
-        return [{
-            name, url, options, callback : cb
-        }]
-    }
-    
-    _resolve(entry: {name: string, url: string, options: any, callback:any}){
-        
-        if(!entry)
-            return;
+		}
+		return [
+			{
+				name,
+				url,
+				options,
+				callback: cb
+			}
+		];
+	}
 
-        const parent: PIXI.LoaderResource = (entry.options || {}).parentResource;
-        if(!parent)
-            return entry;
+
+	_resolveSpine(entry: any) {
+		if(!entry.options || !entry.options.metadata || !entry.options.metadata.data)
+			return;
+		const pack = entry.options.metadata as IPacket;
+		if(pack.mime != "application/json")
+			return;
+
+		const text = decodeURIComponent(pack.data.replace("data:application/json;,",""));
+		const json = JSON.parse(unescape(text));
+		if(!json.bones)
+			return;
+		
+		const path = pack.path;
+		const atlasPath = path.replace(".json", ".atlas");
+		const imagePath = path.replace(".json", ".png");
+		
+		const imageRes = this.bundle[imagePath].data;
+		const atlasRes = decodeURIComponent(this.bundle[atlasPath].data.replace("data:text/plain;,",""));
+		
+		const image = new Image();
+		image.src = imageRes;
+		entry.options.metadata.image = PIXI.BaseTexture.from(image);
+		entry.options.metadata.atlasRawData = atlasRes;
+	}
+
+	_resolve(entry: { name: string; url: string; options: any; callback: any }) {
+		if (!entry) return;
+
+		//spine
+		//this._resolveSpine(entry);
+
+		const parent: PIXI.LoaderResource = (entry.options || {}).parentResource;
+		if (!parent)
+			return entry;
+		
+		
 		const pack = parent.metadata as IPacket;
-		if(!pack || !pack.data)
+		if (!pack || !pack.data) return entry;
+		
+		// не требует разрешения url, уже валидно
+		if (entry.url.indexOf("data:") > -1)
 			return entry;
 		
 		entry.url = basePath(pack.path) + entry.url;
+
 		return entry;
-    }
+	}
 
 	add(...params: any[]) {
-
-        const entry = this._unpackParams(...params).map(this._resolve);
+		const entry = this._unpackParams(...params).map( (e) => this._resolve(e));
 
 		for (let e of entry) {
-			const path = trimPath(e.url);
-			const pack = this.bundle[path];
-			if (!pack) {
-				console.log("Missing res in bundle", e);
-				continue;
-			}
-			e.options = {...e.options, metadata : pack};
-			e.url = pack.data;
+			
+			if (e.url.indexOf("data:") == -1) {
+				
+				const path = trimPath(e.url);
+				const pack = this.bundle[path];
+				
+				if (!pack) {
+					console.log("Missing res in bundle", e);
+					continue;
+				}
 
+				e.url = pack.data;
+				e.options = { ...e.options, metadata: pack};
+				if(pack.mime == MIME.JSON || pack.mime == MIME.TEXT){
+					e.options.loadType = RAW_TEXT_TYPE; 
+				}
+			}
+
+			this._resolveSpine(e);
 			super.add(e.name, e.url, e.options, e.callback);
 		}
 

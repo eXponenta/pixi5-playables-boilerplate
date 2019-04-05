@@ -1,7 +1,7 @@
 import { Config } from '../shared/Config';
 
 export const Assets = {
-    BaseDir: Config.BaseResDir + "/game4",
+    BaseDir: "/game4",
     Assets : {
         "game-atlas": {
             name : "game-atlas",
@@ -17,7 +17,7 @@ export const Assets = {
         },
         "player": {
             name : "player",
-            url : "Player/Game Character.json" 
+            url : "/Player/Game Character.json" 
         }
     }
 }

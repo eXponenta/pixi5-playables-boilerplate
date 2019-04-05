@@ -110,7 +110,7 @@ module.exports = function(
 					if(data.mime == "application/json"){
 						text = jsonCompress(text);
 					}
-					data.data = `data:${mime.mime};,${escape(encodeURIComponent(text.toString()))}`;
+					data.data = `data:${mime.mime};,${escape(text.toString())}`;
 					
 				}
 			}

@@ -53,8 +53,8 @@ export class BaseGame implements IGame {
 		});
 	}
 	
-	preload(): PIXI.Loader{
-	
+	preload(loader?: PIXI.Loader): PIXI.Loader{
+		this.loader = loader || this.loader;
 		if(this.apiData) {
 			this.loader.on("progress", (l, r)=>{
 				this.apiData.submitLoadingProgress( l.progress, {name:r.name});

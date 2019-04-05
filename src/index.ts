@@ -16,6 +16,7 @@ import Resources from "./inline/resources";
 import { Catcher } from './catcher/index';
 import { SoundGrouper } from './shared/Sound';
 import { InlineLoader} from "./InlineLoader";
+import { M2 } from "./shared/M2";
 
 
 export class App extends Application {
@@ -26,7 +27,6 @@ export class App extends Application {
 	public multilang: Multilang;
 	public lang: string;
 	public games: {[key: string]: typeof BaseGame};
-	public resources: PIXI.IResourceDictionary;
 
 	_init: boolean;
 	constructor(parent: HTMLElement) {
@@ -94,8 +94,7 @@ export class App extends Application {
 		SoundGrouper.createManager("Any");
 		
 	
-		//this.loader.add("mainfest", Config.Translations);
-
+		this.loader.add("manifest", Config.Translations);
 		this.loader.load(() => {
 			this.init();
 		});
@@ -103,28 +102,29 @@ export class App extends Application {
 
 	private init() {
 
-		this.multilang = new Multilang(this.resources["translations/manifest.json"].data);
-		this.multilang.langdata = this.resources["translations/en_US.json"].data;
+		this.multilang = new Multilang(this.loader.resources["manifest"].data);
+		this.multilang.preload(this.lang, this.loader);
 
 		this.lang = this.multilang._lang;
 
-		this.uiManager.init(this.resources);
+		this.uiManager.init(this.loader.resources);
 		this.uiManager.visible = false;
 		this.stage.addChild(this.uiManager.stage);
 
-		//this.multilang.once("loaded", () => {
+		this.multilang.once("loaded", () => {
 			this._init = true;
 			this.preparedStart();
 			this.emit("loaded");
-		//});
+		});
 	}
 
-	preparedStart() {
+	async preparedStart() {
 		if(!this._init)
 			throw Error("App can't init!");
 
+		await M2.Delay(1);
 		const game = new Catcher();
-		game.preload().load(() => {
+		game.preload(this.loader).load(() => {
 			this.start(game);
 		});
 	}

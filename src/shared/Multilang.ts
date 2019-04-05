@@ -25,23 +25,22 @@ export class Multilang extends PIXI.utils.EventEmitter {
 		this.manifest = manifest;
 		this._lang = "en_US";
 
-		this.loader = new PIXI.Loader(Config.BaseResDir);
 	}
 
-	preload(lang: string) {
+	preload(lang: string, loader: PIXI.Loader) {
 		if(!this.manifest[lang])
 			lang = 'en_US';
 		
 		const l = this.manifest[lang];
 		this._lang = lang;
 		const base = Config.Translations.substr(0, Config.Translations.lastIndexOf("/"));
-		this.loader
-			.add(base + "/" + l.url)
-			.load()
-			.on("load", (l, r) => {
+		loader
+			.add(base + "/" + l.url,
+			(r:any) => {
 				this.langdata = r.data;
 				this.emit("loaded");
-			});	
+			})
+			.load();
 	}
 
 	getTextBase(group : string) : ITextBase {
