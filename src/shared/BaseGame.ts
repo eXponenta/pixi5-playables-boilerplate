@@ -44,13 +44,13 @@ export class BaseGame implements IScene {
 		return this.loader;
 	}
 
-	pause(): void {
+	pause(soft: boolean): void {
 		if(this.input){
 			this.input.unbindInput();
 		}
 	}
 
-	resume(): void {
+	resume(soft: boolean): void {
 		if(this.input)
 			this.input.bindInput();
 	}

@@ -321,16 +321,21 @@ export class Catcher extends BaseGame implements IUIListener{
 
 	
 	// its real pause, when tab changed
-	pause(): void {
-		this.app.uiManager.onPause();
-		super.pause();
+	pause(soft: boolean): void {
+		if(!soft){
+			this.app.uiManager.onPause();
+		}
+		super.pause(soft);
 	}
 
 	// real resume
-	resume(): void {
+	resume(soft: boolean): void {
 		
-		this.app.uiManager.onResume();
-		super.resume();
+		if(!soft){
+			this.app.uiManager.onResume();
+		}
+
+		super.resume(soft);
 	}
 
 	update(ticker: PIXI.Ticker): void {
