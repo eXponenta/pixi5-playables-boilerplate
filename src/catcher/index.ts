@@ -7,8 +7,7 @@ import { ObjectType, GameConfig, ILevelData } from './GameConfig';
 import { M2 } from "../shared/M2";
 import { PopupType } from '../shared/ui/Popup';
 import { UiManager, ControlsLayout } from '../shared/ui/UiManager';
-import { InputHandler } from '../shared/CrossplatformInputHandler';
-import { Tween } from '@tweenjs/tween.js';
+import { InputHandler } from '../core/inputHandler';
 import { Player, PlayerAnimPhase } from './Player';
 import { FrontSprite } from '../shared/FrontSprite';
 import { IUIListener, IPopup } from '../shared/ui/IUIListener';
@@ -46,18 +45,17 @@ export class Catcher extends BaseGame implements IUIListener{
 		return this._drops;
 	}
 
-	constructor() {
+	constructor(public app: App) {
 		super();
 		
 		this.input = new InputHandler(false, M2.mobile);
-		this.apiData = new APIData("Catcher", this);
+		this.apiData = new APIData("Catcher", this as any);
 		this.stage = new PIXI.Container();
 		this.physics = new PIXI.Container();
 		this.physics.sortableChildren = true;
 	}
 
-	init(app: App){
-		this.app = app;
+	init(){
 		this.sounds = SoundGrouper.createManager("Catcher", this.loader.resources);
 		this.sounds.Play("main_theme2", {loop: true, volume: .25});
 		
@@ -87,8 +85,8 @@ export class Catcher extends BaseGame implements IUIListener{
 		
 		this.player = new Player(this._res);
 		this.player.scale.set(1.5);
-		this.player.safeArea = new PIXI.Rectangle(160, 0, app.width - 320, app.height);
-		this.player.position.set(app.width * 0.5, app.height - yOffset)
+		this.player.safeArea = new PIXI.Rectangle(160, 0, this.app.width - 320, this.app.height);
+		this.player.position.set(this.app.width * 0.5, this.app.height - yOffset)
 		
 
 		const slot = this.player.getSlotSprite("basket front") as PIXI.Sprite;
@@ -114,21 +112,21 @@ export class Catcher extends BaseGame implements IUIListener{
 		this.app.renderer.backgroundColor = 0x001815;
 
 		const fg = new PIXI.Sprite(this._res["fg"].texture);
-		fg.scale.set(app.width / fg.texture.width);
+		fg.scale.set(this.app.width / fg.texture.width);
 		fg.anchor.set(0, 1);
-		fg.y = app.height + bottomHeight - yOffset ;
+		fg.y = this.app.height + bottomHeight - yOffset ;
 		
-		this.spawnOffset = app.height - fg.height;
+		this.spawnOffset = this.app.height - fg.height;
 
 		const bg = new PIXI.Sprite(this._res["bg"].texture);
-		bg.scale.set(app.width / bg.texture.width);
+		bg.scale.set(this.app.width / bg.texture.width);
 		bg.anchor.set(0, 1);
 		bg.y = fg.y - 240;
 		
 		this.stage.addChild(bg,this.physics,fg);
 		
 		this.app.uiManager.hint.open(this.lang.hello);
-        super.init(app);
+        super.init(this.app);
 		super.start();
 	}
 
@@ -197,9 +195,6 @@ export class Catcher extends BaseGame implements IUIListener{
 		}
 	}
 	
-	softPause(): boolean {
-		return super.softPause();
-	}
 	// --- End
 
 	_lastX: number;

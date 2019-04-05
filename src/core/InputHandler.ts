@@ -1,4 +1,4 @@
-import { Controls } from "./ui/Controls";
+import { Controls } from "../shared/ui/Controls";
 import { KeyInputHandler } from "../pixi-utils/InputHandler";
 
 enum Direction {

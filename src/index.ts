@@ -1,12 +1,13 @@
 import HookPixi from "./pixi-utils";
 	HookPixi();
 
+import { Application } from "./core/Application";
+import { IScene } from "./core/IScene";
+
 import Sounds from "./sounds.json";
 import TWEEN from "@tweenjs/tween.js";
-import { Application } from "./Application";
 import { Config } from "./shared/Config";
 import { Assets } from "./shared/AssetsLib";
-import { BaseGame } from "./shared/BaseGame";
 import { UiManager } from "./shared/ui/UiManager";
 import { GameApiInterface, FakeGameApi } from './GameAPI';
 import { Multilang } from "./shared/Multilang";
@@ -16,18 +17,18 @@ import Resources from "./inline/resources";
 //games
 import { Catcher } from './catcher/index';
 import { SoundGrouper } from './shared/Sound';
-import { InlineLoader} from "./InlineLoader";
+import { InlineLoader} from "./loader/InlineLoader";
 import { M2 } from "./shared/M2";
 
 
 export class App extends Application {
 	static instance: App;
 	public api: GameApiInterface;
-	private _currentGame?: BaseGame;
+	private _currentScene?: IScene;
 	public uiManager: UiManager;
 	public multilang: Multilang;
 	public lang: string;
-	public games: {[key: string]: typeof BaseGame};
+	public games: {[key: string]: IScene};
 
 	_init: boolean;
 	constructor(parent: HTMLElement) {
@@ -56,8 +57,6 @@ export class App extends Application {
 		this.lang = 'en_US';
 
 		this.api = new FakeGameApi();
-		//@ts-ignore		
-		window.GameAPI = this.api;
 		
 		this.uiManager = new UiManager(this);
 		this.uiManager.visible = false;
@@ -126,59 +125,59 @@ export class App extends Application {
 			throw Error("App can't init!");
 
 		await M2.Delay(1);
-		const game = new Catcher();
+		const game = new Catcher(this);
 		game.preload(this.loader).load(() => {
 			this.start(game);
 		});
 	}
 
-	start(game: BaseGame) {
+	start(game: IScene) {
 		
-		this._currentGame = game;
+		this._currentScene = game;
 
 		this.uiManager.bindListener(game as any);
-		this._currentGame.init(this);
+		this._currentScene.init(this);
 		this.uiManager.postInit();
 
-		this.stage.addChildAt(this._currentGame.stage, 0);
+		this.stage.addChildAt(this._currentScene.stage, 0);
 		
 		this.resume();
 		super.start();
 	}
 
 	stop() {
-		if (this._currentGame) {
-			this.stage.removeChild(this._currentGame.stage);
+		if (this._currentScene) {
+			this.stage.removeChild(this._currentScene.stage);
 			this.uiManager.reset();
-			this._currentGame.stop();
-			if(this._currentGame.sounds)
-				this._currentGame.sounds.Stop();
+			this._currentScene.stop();
+			//if(this._currentScene.sounds)
+			//	this._currentScene.sounds.Stop();
 		}
-		this._currentGame = undefined;
+		this._currentScene = undefined;
 		super.render();
 		super.stop();
 	}
 
 	pause() {
 		this.ticker.stop();
-		if (this._currentGame) {
-			this._currentGame.pause();
+		if (this._currentScene) {
+			this._currentScene.pause(false);
 		}
 		
 		this.update();
 	}
 
 	resume() {
-		if (!this._currentGame) return;
+		if (!this._currentScene) return;
 
-		this._currentGame.resume();
+		this._currentScene.resume(false);
 		super.start();
 	}
 
 	private update() {
 		TWEEN.update(this.ticker.lastTime);
-		if (this._currentGame != null) {
-			this._currentGame.update(this.ticker);
+		if (this._currentScene != null) {
+			this._currentScene.update(this.ticker);
 		}
 
 		this.render();

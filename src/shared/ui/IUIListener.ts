@@ -1,5 +1,6 @@
 import { ITextBase } from '../Multilang';
 import { APIData } from '../APIData';
+import { IScene } from "../../core/IScene";
 
 export enum IPopup {
     MENU,
@@ -7,7 +8,7 @@ export enum IPopup {
     CLOSING
 }
 
-export interface IUIListener {
+export interface IUIListener extends IScene {
 
     //sync
     apiData: APIData;
@@ -16,8 +17,5 @@ export interface IUIListener {
     setLevel(level: number): void;
     reload(): void;
 
-    // return true - when popup is allowed
-    softPause(): boolean;
-    softResume(): void;
     popupOpened(popup: IPopup): void;
 }

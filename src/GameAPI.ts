@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
 import { App } from './index';
-import { GA } from "./GA";
 
 export interface GameApiInterface {
 	getGameData(gameId: string): GameDataInterface | undefined;
@@ -97,7 +96,6 @@ export class EmbeddedGameApi implements GameApiInterface {
 		this.api = (window as any).InternalAPI;
 		if (!this.api) { 
 			const  err = new Error("Illegal state, InternalAPI is missing");
-			GA.error(err, true);
 			throw err;
 		}
 	}
@@ -118,7 +116,6 @@ export class EmbeddedGameApi implements GameApiInterface {
 
 		if(res && res.gameId !== gameId) {
 			const e = new Error(`Inlegal gameId. Expected: ${gameId}, got: ${res.gameId}`)
-			GA.error(e, true);
 			throw e;
 		}
 		return res ? res.data : undefined;
@@ -159,7 +156,6 @@ export class EmbeddedGameApi implements GameApiInterface {
 			return JSON.parse(result || "null");
 
 		} catch(e) {
-			GA.error(e, true);
 			throw e;
 		}
 		

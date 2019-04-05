@@ -1,9 +1,10 @@
 import { APIData } from '../shared/APIData';
 import { App } from "..";
-import { StateBech } from "./StateBech";
-import { InputHandler } from './CrossplatformInputHandler';
+import { StateBech } from "../core/StateBech";
+import { InputHandler } from './../core/inputHandler';
 import { ITextBase } from './Multilang';
 import { SoundManager } from './Sound';
+import { IScene } from '../core/IScene';
 
 export enum GameState {
 	PRE,
@@ -13,24 +14,9 @@ export enum GameState {
 	LOSE
 }
 
-export interface IGame {
+export class BaseGame implements IScene {
+	kind: "scene";
 
-	stage: PIXI.Container;
-	loader: PIXI.Loader;
-	apiData: APIData;
-	app: App;
-	gameState: StateBech<GameState>;
-	input: InputHandler;
-	softPause(): void;
-	softResume(): void;
-	init(app: App): void;
-	start(): void;
-	preload(): PIXI.Loader;
-	stop(): void;
-	update(ticker: PIXI.ticker.Ticker): void
-}
-
-export class BaseGame implements IGame {
 	sounds: SoundManager;
 	lang: ITextBase;
 	stage: PIXI.Container;
@@ -54,47 +40,19 @@ export class BaseGame implements IGame {
 	}
 	
 	preload(loader?: PIXI.Loader): PIXI.Loader{
-		this.loader = loader || this.loader;
-		if(this.apiData) {
-			this.loader.on("progress", (l, r)=>{
-				this.apiData.submitLoadingProgress( l.progress, {name:r.name});
-			});
-		}
+		this.loader = loader || this.loader || new PIXI.Loader();
 		return this.loader;
 	}
 
-	softPause() {
-		const allow = this.gameState.current == GameState.GAME && !this._isPaused;
-		this._isPaused = true;
-		return allow;
-	}
-
-	softResume() {
-		if(this._isPaused) {
-			this._isPaused = false;
-			//this.app.uiManager.pause.close();
-		}
-	}
-
 	pause(): void {
-		this.softPause();
-		
 		if(this.input){
 			this.input.unbindInput();
 		}
-
-		this.apiData.submitState({
-			type: "pause"
-		});
 	}
 
 	resume(): void {
 		if(this.input)
 			this.input.bindInput();
-
-		this.apiData.submitState({
-			type: "resume"
-		});
 	}
 
 	stop(): void {
@@ -119,9 +77,6 @@ export class BaseGame implements IGame {
 			texture: true,
 			baseTexture: true,
 		});
-
-		this.loader.reset();
-		this.apiData.submitState({type: "close"});
 	}
 
 

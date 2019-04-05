@@ -1,6 +1,5 @@
 import { GameApiInterface, GameStateInterface } from "../GameAPI";
 import { App } from "../index";
-import { GA } from "../GA";
 import { BaseGame } from "./BaseGame";
 export interface ILevel {
 	opened: boolean;
@@ -52,8 +51,6 @@ export class APIData {
 			let data = this._apiBridge.getGameData(this._name);
 			data = { ...def, ...(data || {}) };
 			
-			GA.log(this._name,  {eventAction: "getData", data});
-
 			if (data && !data.error) {
 				if (data.data instanceof Array) {
 					for (let i = 0; i < Math.min(data.data.length, this.levels.length); i++) {
@@ -74,7 +71,6 @@ export class APIData {
 			}
 			this._inited = true;
 		} catch (e) {
-			GA.error(e, true);
 		}
 	}
 

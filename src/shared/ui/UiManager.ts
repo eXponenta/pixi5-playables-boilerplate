@@ -1,14 +1,13 @@
-import { Application } from "../../Application";
+import { Application } from "../../core/Application";
 import { Progress } from "./Progress";
 import { Button } from "./Button";
-import { CheckedButton } from "./CheckedButton";
 import { PopupDifficulty, PopupType } from './Popup';
 import { Assets } from "../AssetsLib";
 import { Utils } from "./Utils";
 import { Hint } from "./Hint";
 import { Pause } from "./Pause";
 import { AnimatedPopup } from "./AnimatedPopup";
-import { IUIListener, IPopup } from './IUIListener';
+import { IPopup, IUIListener } from './IUIListener';
 import { Controls } from "./Controls";
 import { SoundGrouper } from '../Sound';
 
@@ -68,7 +67,7 @@ export class UiManager extends PIXI.utils.EventEmitter {
 
 	private _controls: Controls;
 	private _controls_full: Controls;
-	private _uiListener: IUIListener;
+	private _currentScene: IUIListener;
 
 	_options: IUiOptions = { ...DEF_OPTIONS };
 	constructor(app: Application) {
@@ -152,12 +151,12 @@ export class UiManager extends PIXI.utils.EventEmitter {
 
 	public bindListener(lst: IUIListener) {
 		this.reset();
-		this._uiListener = lst;
+		this._currentScene = lst;
 	}
 
 	public postInit() {
 		//@ts-ignore
-		this.popup.applyTranslation(this._uiListener.lang["levels_button"]);
+		this.popup.applyTranslation(this._currentScene.lang["levels_button"]);
 	}
 
 	public update(ticker: PIXI.Ticker) {}
@@ -178,10 +177,10 @@ export class UiManager extends PIXI.utils.EventEmitter {
 		this._controls.visible = this._options.controlLayout == ControlsLayout.HOR && this._options.showArrows;
 		this._controls_full.visible = this._options.controlLayout == ControlsLayout.FULL && this._options.showArrows;
 
-		if (this._uiListener) {
+		if (this._currentScene) {
 			//sync level data
 			this.popup.setLevelStatus(
-				this._uiListener.apiData.levels.map(e => ({ opened: e.opened, complete: e.playing > 0 }))
+				this._currentScene.apiData.levels.map(e => ({ opened: e.opened, complete: e.playing > 0 }))
 			);
 		}
 
@@ -246,7 +245,7 @@ export class UiManager extends PIXI.utils.EventEmitter {
 				this.popup.interactiveChildren = true;
 				this.exit.interactiveChildren = true;
 				
-				this._uiListener.softResume();
+				this._currentScene.resume(true);
 				this.popPopup(true);
 				
 				this.exit.buttons["cancel"].off("b-click", handle, this);
@@ -267,13 +266,13 @@ export class UiManager extends PIXI.utils.EventEmitter {
 
 		this.pause.playButton.on("b-click", () => {
 			this.popPopup(true);
-			this._uiListener.softResume();
+			this._currentScene.resume(true);
 		});
 
 		this.pause.reloadButton.on("b-click", () => {
 			this.clearPopupStack();
-			this._uiListener.reload();
-			this._uiListener.softResume();
+			this._currentScene.reload();
+			this._currentScene.resume(true);
 		});
 
 		this.pause.menuButton.on("b-click", () => {
@@ -287,8 +286,8 @@ export class UiManager extends PIXI.utils.EventEmitter {
 		});
 
 		this.popup.on("level-click", (l: number) => {
-			this._uiListener.setLevel(l);
-			this._uiListener.softResume();
+			this._currentScene.setLevel(l);
+			this._currentScene.resume(true);
 			this.clearPopupStack();
 			//this.popPopup(true);
 		});
@@ -324,7 +323,7 @@ export class UiManager extends PIXI.utils.EventEmitter {
 
 				//кастыль 
 				setTimeout(()=>{
-					if(this._uiListener.apiData.current == 3){
+					if(this._currentScene.apiData.current == 3){
 						SoundGrouper.managers["Any"].Play("win");
 					} else {
 						SoundGrouper.managers["Any"].Play("next_level");
@@ -338,7 +337,7 @@ export class UiManager extends PIXI.utils.EventEmitter {
 			top.close();
 		}
 
-		this._uiListener.popupOpened(popup);
+		//this._currentScene.popupOpened(popup);
 		if (popup == undefined) return;
 		
 		if (popup == IPopup.CLOSING) {
@@ -357,7 +356,7 @@ export class UiManager extends PIXI.utils.EventEmitter {
 
 	onPause(immediate: boolean = true) {
 		this.emit("soft-pause");
-		this._uiListener.softPause();
+		this._currentScene.pause(true);
 		if (this.openedPopup.length == 0) {
 			this.pushPopup(IPopup.PAUSE, !immediate);
 		}
