@@ -1,5 +1,6 @@
+
 export default function() {
-	PIXI.Loader.prototype.filter = function(func: (v: PIXI.loaders.Resource) => boolean) {
+	PIXI.Loader.prototype.filter = function(func: (v: PIXI.LoaderResource) => boolean) {
 		if (!func) return [];
 
 		const ress = this.resources;
@@ -16,4 +17,10 @@ export default function() {
 
 		return ret;
 	};
+
+	PIXI.Loader.prototype.loadAsync = async function() {
+		return new Promise((res, rej) => {
+			this.load( (l : PIXI.Loader, r: PIXI.IResourceDictionary) => res(r));
+		});
+	} 
 }

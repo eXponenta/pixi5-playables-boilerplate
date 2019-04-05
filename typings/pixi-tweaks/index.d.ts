@@ -14,6 +14,7 @@ declare module PIXI {
 
 declare module PIXI {
 	export interface Loader {
-		filter(func: (v: PIXI.loaders.Resource) => boolean): PIXI.LoaderResource[];
+		filter(func: (v: PIXI.LoaderResource) => boolean): PIXI.LoaderResource[];
+		loadAsync() : Promise<PIXI.IResourceDictionary>;
 	}
 }

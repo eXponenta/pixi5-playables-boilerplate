@@ -97,9 +97,9 @@ export class App extends Application {
 		
 	
 		this.loader.add("manifest", Config.Translations);
-		this.loader.load(() => {
-			this.init();
-		});
+		await this.loader.loadAsync();
+		
+		this.init();
 	}
 
 	private init() {
@@ -125,10 +125,11 @@ export class App extends Application {
 			throw Error("App can't init!");
 
 		await M2.Delay(1);
+		
 		const game = new Catcher(this);
-		game.preload(this.loader).load(() => {
-			this.start(game);
-		});
+		await game.preload(this.loader).loadAsync();
+		
+		this.start(game);
 	}
 
 	start(game: IScene) {
