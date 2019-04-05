@@ -140,8 +140,8 @@ const watch_tsc = () => {
 const tob64 = ()=> {
     return gulp
             .src(paths.res)
-            .pipe(b64inliner({filename: "res.js", groupname:"RESOURCES"}))
-            .pipe(gulp.dest("./res-compiled"));
+            .pipe(b64inliner({filename: "resources.ts", map_options:{es6: true}}))
+            .pipe(gulp.dest("./src/inline"));
 }
 gulp.task("tob64", tob64)
 gulp.task("default", watch_tsc);

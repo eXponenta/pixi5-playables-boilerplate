@@ -26,12 +26,21 @@ const normalize = input => {
 	return input.replace(/\\/g, "/");
 };
 
+const jsonCompress = text =>{
+	return text.replace(/\n|\r|\t|\f/g, "");
+}
+
 const escape = text => {
-	return text
-		.replace(/(\r\n|\n|\r)/gm, "\\n")
-		.replace(/"/g, '\\"')
-		.replace(/'/g, "\\'");
+	return text.replace(/\'/g, "\\'")
+				.replace(/\\\\/g, "\\")
+				.replace(/\//g, "\/")
+				.replace(/\"/g, '\"')
+				.replace(/\r/g, "\\r")
+				.replace(/\t/g, "\\t")
+				.replace(/\n/g, "\\n")
+				.replace(/\f/g, "\\f");
 };
+
 const def_map = (entries, options) => {
 	let str = "";
 	for (let name in entries) {
@@ -49,10 +58,12 @@ const def_map = (entries, options) => {
 			})
 			.join(",\n");
 
-		if(options.es6)
-			str += `export ${name} {\n${data}}`;
-		else 
-			str += `const ${name} {\n${data}}`;
+		if (options.es6) {
+			if (name == "default") str += `export default {\n${data}}`;
+			else str += `export const ${name} = {\n${data}}`;
+		} else {
+			str += `const ${name} = {\n${data}}`;
+		}
 	}
 
 	return str;
@@ -95,7 +106,12 @@ module.exports = function(
 				if (mime.encode) {
 					data.data = `data:${mime.mime};base64,${file.contents.toString("base64")}`;
 				} else {
-					data.data = escape(new String(file.contents));
+					let text = new String(file.contents);
+					if(data.mime == "application/json"){
+						text = jsonCompress(text);
+					}
+					data.data = escape(text);
+					
 				}
 			}
 

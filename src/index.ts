@@ -1,8 +1,6 @@
 import HookPixi from "./pixi-utils";
 	HookPixi();
 
-import {loadAsync} from "jszip";
-import {zipContent} from "./zip";
 import TWEEN from "@tweenjs/tween.js";
 import { Application } from "./Application";
 import { Config } from "./shared/Config";
@@ -15,6 +13,7 @@ import { Multilang } from "./shared/Multilang";
 //games
 import { Catcher } from './catcher/index';
 import { SoundGrouper } from './shared/Sound';
+import { InlinedResources } from "./InlineLoader";
 
 
 export class App extends Application {
@@ -25,6 +24,7 @@ export class App extends Application {
 	public multilang: Multilang;
 	public lang: string;
 	public games: {[key: string]: typeof BaseGame};
+	public resources: PIXI.IResourceDictionary;
 
 	_init: boolean;
 	constructor(parent: HTMLElement) {
@@ -78,53 +78,42 @@ export class App extends Application {
 	}
 
  	async load() {
-
-		const zip = await loadAsync(zipContent, {base64: true});
-		const filesBase64: {[key: string] : {len: number, data: string}} = {};
-		zip.forEach(async (rp, file)=>{
-			
-			const filepres = {len: 0, data: ""}
-			if(!file.dir){
-				const str = await file.async("base64");
-				filepres.len = str ? str.length: -1;
-				filepres.data = str;
-				filesBase64[rp] = filepres;
-			}
-		});
-		console.log("decoded files", filesBase64);
-
-		// на всякий случай такой кастыль
-		this.loader.baseUrl = Assets.BaseDir;
-		SoundGrouper.createManager("Any");
 		
 		//@ts-ignore
 		const ui_asset = Assets.AssetsTranslated[this.lang] || {};
 
-		//@ts-ignore
-		this.loader.add(Object.values( {...Assets.Assets, ...ui_asset}));
-	
-		this.loader.add("mainfest", Config.Translations);
+		//@ts-ignore 
+		this.resources = await InlinedResources.parse(Object.values( {...Assets.Assets, ...ui_asset}));
+		console.log(this.resources);
 
-		this.loader.load(() => {
-			this.init();
-		});
+		// на всякий случай такой кастыль
+		//this.loader.baseUrl = Assets.BaseDir;
+		SoundGrouper.createManager("Any");
+		
+	
+		//this.loader.add("mainfest", Config.Translations);
+
+		//this.loader.load(() => {
+		this.init();
+		//});
 	}
 
 	private init() {
 
-		this.multilang = new Multilang(this.loader.resources["mainfest"].data);
-		this.multilang.preload(this.lang);
+		this.multilang = new Multilang(this.resources["translations/manifest.json"].data);
+		this.multilang.langdata = this.resources["translations/en_US.json"].data;
+
 		this.lang = this.multilang._lang;
 
-		this.uiManager.init(this.loader.resources);
+		this.uiManager.init(this.resources);
 		this.uiManager.visible = false;
 		this.stage.addChild(this.uiManager.stage);
 
-		this.multilang.once("loaded", () => {
+		//this.multilang.once("loaded", () => {
 			this._init = true;
 			this.preparedStart();
 			this.emit("loaded");
-		});
+		//});
 	}
 
 	preparedStart() {

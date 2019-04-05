@@ -6,18 +6,18 @@ export const Assets = {
 	Assets: {
 		"ui-atlas" : {
 			name: "ui-atlas",
-			url: "./ui/en_US/ui-atlas.json"
+			url: "/ui/en_US/ui-atlas.json"
 		},
         "ui-map" : { 
             name: "ui-map", 
-            url: "./ui/ui-map.json" 
+            url: "/ui/ui-map.json" 
 		}
 	},
 	AssetsTranslated : {
 		'en_US' : {
 			"ui-atlas" : {
 				name: "ui-atlas",
-				url: "./ui/en_US/ui-atlas.json"
+				url: "/ui/en_US/ui-atlas.json"
 			}
 		}
 	}
