@@ -20,13 +20,18 @@ export interface ApplicationOptions {
 
 export class Application extends PIXI.utils.EventEmitter {
 
+    //@ts-ignore
     public renderer: PIXI.Renderer;
+    //@ts-ignore
     public ticker: PIXI.Ticker = new PIXI.Ticker();
+    //@ts-ignore
     public stage: PIXI.Container = new PIXI.Container();
+    //@ts-ignore
     public loader: PIXI.Loader = new PIXI.Loader();
   
     constructor(options: ApplicationOptions) {
         super();
+        //@ts-ignore
         this.renderer = new PIXI.Renderer(options);
         this.renderer.plugins.interaction.moveWhenInside = true;
 

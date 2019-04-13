@@ -1,8 +1,7 @@
-
 //@ts-ignore
 import * as PIXI from './pixi'
 
-import ActivateUtils from "./pixi-utils";
+import ActivateUtils from "./pixi-utils/index";
 	ActivateUtils();
 
 import { Application } from "./core/Application";
@@ -104,3 +103,5 @@ export class App extends Application {
 		this.render();
 	}
 }
+//@ts-ignore
+global.App = App;
