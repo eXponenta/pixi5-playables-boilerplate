@@ -1,9 +1,13 @@
 import container from "./ContainerExt";
 import display from "./DisplayExt";
 import loader from "./LoaderExt";
-
-export default  function HookPixi() {
+import emitter from "./EventEmitterExt";
+ 
+const path = function() {
     container();
     display();
+    emitter();
     loader();
 }
+
+export default path;

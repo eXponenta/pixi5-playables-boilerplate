@@ -1,5 +1,5 @@
-import HookPixi from "./pixi-utils";
-	HookPixi();
+import ActivateUtils from "./pixi-utils";
+	ActivateUtils();
 
 import { Application } from "./core/Application";
 import { IScene } from "./core/IScene";
@@ -95,14 +95,13 @@ export class App extends Application {
 		//this.loader.baseUrl = Assets.BaseDir;
 		SoundGrouper.createManager("Any", this.loader.resources);
 		
-	
 		this.loader.add("manifest", Config.Translations);
 		await this.loader.loadAsync();
 		
 		this.init();
 	}
 
-	private init() {
+	private async init() {
 
 		this.multilang = new Multilang(this.loader.resources["manifest"].data);
 		this.multilang.preload(this.lang, this.loader);
@@ -113,11 +112,12 @@ export class App extends Application {
 		this.uiManager.visible = false;
 		this.stage.addChild(this.uiManager.stage);
 
-		this.multilang.once("loaded", () => {
-			this._init = true;
-			this.preparedStart();
-			this.emit("loaded");
-		});
+		await this.multilang.onceAsynce("loaded");
+		
+		this._init = true;
+		this.preparedStart();
+		this.emit("loaded");
+	
 	}
 
 	async preparedStart() {

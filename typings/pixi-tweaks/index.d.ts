@@ -17,4 +17,11 @@ declare module PIXI {
 		filter(func: (v: PIXI.LoaderResource) => boolean): PIXI.LoaderResource[];
 		loadAsync() : Promise<PIXI.IResourceDictionary>;
 	}
+
+}
+
+declare module PIXI.utils {
+	export interface EventEmitter {
+		onceAsynce(event: string): Promise<any>;
+	}
 }

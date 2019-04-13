@@ -112,7 +112,7 @@ export class InlineLoader extends PIXI.Loader {
 		if(pack.mime != "application/json")
 			return;
 
-		const text = decodeURIComponent(pack.data.replace("data:application/json;,",""));
+		const text = pack.data.replace("data:application/json;,","");
 		const json = JSON.parse(unescape(text));
 		if(!json.bones)
 			return;
@@ -122,7 +122,7 @@ export class InlineLoader extends PIXI.Loader {
 		const imagePath = path.replace(".json", ".png");
 		
 		const imageRes = this.bundle[imagePath].data;
-		const atlasRes = decodeURIComponent(this.bundle[atlasPath].data.replace("data:text/plain;,",""));
+		const atlasRes = this.bundle[atlasPath].data.replace("data:text/plain;,","");
 		
 		const image = new Image();
 		image.src = imageRes;
