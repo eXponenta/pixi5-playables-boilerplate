@@ -37,7 +37,7 @@
     "gulp-preprocess": "^3.0.2",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^5.0.0",
-    "gulp-uglify": "^3.0.1",
+    "gulp-uglify-es": "^1.0.4",
     "gulp-util": "^3.0.8",
     "tsify": "^4.0.1",
     "typescript": "^3.3.3",
