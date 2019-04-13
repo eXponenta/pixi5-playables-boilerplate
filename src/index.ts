@@ -1,13 +1,15 @@
 //@ts-ignore
 import * as PIXI from './pixi'
 
+//@ts-ignore
+window.PIXI = PIXI;
+
 import ActivateUtils from "./pixi-utils/index";
 	ActivateUtils();
 
 import { Application } from "./core/Application";
 import { IScene } from "./core/IScene";
 import { SimpleScene } from './SimpleScene';
-
 
 export class App extends Application {
 	static instance: App;
@@ -104,4 +106,4 @@ export class App extends Application {
 	}
 }
 //@ts-ignore
-global.App = App;
+window.App = App;

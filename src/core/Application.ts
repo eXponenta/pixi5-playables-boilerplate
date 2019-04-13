@@ -1,5 +1,6 @@
 //@ts-ignore
 import * as PIXI from './../pixi'
+//@ts-ignore
 
 export interface ApplicationOptions {
         autoStart?: boolean;

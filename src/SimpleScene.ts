@@ -18,7 +18,7 @@ export class SimpleScene implements IScene {
 		this.bunny = new PIXI.Sprite(this.loader.resources["bunny"].texture);
 		this.bunny.anchor.set(0.5);
 		this.bunny.position.set(this.app.width >> 1, this.app.height >>1);
-
+		this.stage.addChild(this.bunny);
 		setInterval(()=> {
 			this.bunny.position.set(
 				Math.random() * app.width,

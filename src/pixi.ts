@@ -27,5 +27,9 @@ export * from '@pixi/core'
 // @ts-ignore
 import { Renderer } from '@pixi/core';
 // @ts-ignore
+import * as interaction from '@pixi/interaction';
+export { interaction };
+// @ts-ignore
 import { BatchRenderer } from '@pixi/core';
 Renderer.registerPlugin('batch', BatchRenderer);
+Renderer.registerPlugin('interaction', interaction.InteractionManager);

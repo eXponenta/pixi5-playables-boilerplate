@@ -30,7 +30,15 @@ const brows_pipe = browserify({
 	packageCache: {}
 })
 	.plugin(tsify, { target: "es6" })
-	.transform(babelify, { extensions: [".tsx", ".ts"] , presets: ['@babel/preset-env'] });
+	.transform(babelify, {
+		extensions: [".tsx", ".ts"],
+		presets: [
+			["@babel/preset-env",
+			{
+				exclude: ["babel-plugin-transform-async-to-generator", "babel-plugin-transform-regenerator"]
+			}]
+		]
+	});
 
 gulp.task("clear-release", () => {
 	return del(["dist"]);
