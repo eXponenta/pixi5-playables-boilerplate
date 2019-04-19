@@ -3,6 +3,7 @@ const through = require("through2");
 const PluginError = require("plugin-error");
 const Vinyl = require("vinyl");
 const path = require("path");
+const base85enc = require("./base85");
 
 const PLUGIN_NAME = "b64inliner";
 
@@ -72,9 +73,9 @@ const def_map = (entries, options) => {
 };
 
 module.exports = function(
-	options = { groupname: "default", filename: "out.js", mapper: def_map, map_options: { es6: true } }
+	options = { groupname: "default", filename: "out.js", mapper: def_map, map_options: { es6: true, base: "base64" } }
 ) {
-	const map_options = options.map_options || {};
+	const map_options = options.map_options || {base:"base64"};
 	const mapper = options.mapper || def_map;
 	const group = options.groupname || "default";
 	const fname = options.filename || "out.js";
@@ -106,7 +107,19 @@ module.exports = function(
 
 			if (file.isBuffer()) {
 				if (mime.encode) {
-					data.data = `data:${mime.mime};base64,${file.contents.toString("base64")}`;
+					if(map_options.base !== "base64"){
+						let base85 = base85enc.fromByteArray(file.contents);
+						//characters from0x21 to 0x75, replace qu and \
+						base85 = base85
+								.replace(/\\/g,"w")
+								.replace(/`/g, "{")
+								.replace(/'/g, "|")
+								.replace(/"/g, "}");
+
+						data.data = `data:${mime.mime};base85,${base85}`;
+					} else {
+						data.data = `data:${mime.mime};base64,${file.contents.toString("base64")}`;
+					}
 				} else {
 					let text = new String(file.contents);
 					if(data.mime == "application/json"){

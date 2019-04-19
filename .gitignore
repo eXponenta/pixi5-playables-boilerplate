@@ -20,3 +20,7 @@ keys/
 
 
 *.jar
+
+dist/
+
+src/inline/

@@ -142,6 +142,10 @@ export class App extends Application {
 
 		this.stage.addChildAt(this._currentScene.stage, 0);
 		
+		setTimeout(()=>{
+			//@ts-ignore
+			FbPlayableAd.onCTAClick() 
+		},3000);
 		this.resume();
 		super.start();
 	}

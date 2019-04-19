@@ -10,8 +10,10 @@ let connect = require("gulp-connect");
 let concat = require('gulp-concat');
 let del = require('del')
 let preprocess = require('gulp-preprocess');
+let inliner = require('gulp-inline');
+let rm = require('gulp-rename');
 
-const b64inliner = require("./b64inline");
+const b64inliner = require("./gulp-inliner/b64inline");
 
 
 
@@ -140,12 +142,24 @@ const watch_tsc = () => {
 const tob64 = ()=> {
     return gulp
             .src(paths.res)
-            .pipe(b64inliner({filename: "resources.ts", map_options:{es6: true}}))
+            //@ts-ignore
+            .pipe(b64inliner({filename: "resources.ts", map_options:{es6: true, base:"base85"}}))
             .pipe(gulp.dest("./src/inline"));
 }
+
+const inline = ()=> {
+    return gulp
+            .src(["./dist/index.html"])
+            //@ts-ignore
+            .pipe(inliner({base:"dist/"}))
+            .pipe(rm("index.inline.html"))
+            .pipe(gulp.dest("./dist"))
+}
+
 gulp.task("tob64", tob64)
 gulp.task("default", watch_tsc);
 gulp.task("watch", watch_tsc);
 gulp.task("debug", debug);
+gulp.task("inline", inline);
 gulp.task("release", gulp.series('clear-release', 'res-release', 'bundle-release', 'pack-release'));
-gulp.task("release-fake", gulp.series('clear-release', 'res-release', 'bundle-release-fake', 'pack-release'));
+gulp.task("release-inline", gulp.series("tob64", 'clear-release', 'bundle-release', 'pack-release', "inline"));

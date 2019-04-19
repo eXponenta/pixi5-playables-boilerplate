@@ -1,3 +1,5 @@
+import { decodeToBase64 } from './Base85encoder';
+
 export interface IPacket {
 	data: string;
 	mime: string;
@@ -60,6 +62,27 @@ export class InlineLoader extends PIXI.Loader {
 		super(baseUrl, concurrency);
 	}
 
+	_b85tob64(input: string) {
+		const start = input.indexOf(";") + 1;
+		const s = input.substr(start, 6).trim();
+		if(s !== "base85") return input;
+		/*
+			.replace(/\\/g,"w")
+			.replace(/`/g, "{")
+			.replace(/'/g, "|")
+			.replace(/"/g, "}");
+		*/
+		let finput = input
+				.substr(start + 7)
+				.replace(/w/g, "\\")
+				.replace(/\{/g,"\`" )
+				.replace(/\|/g, "\'")
+				.replace(/\}/g,"\"");
+
+		const b64 = decodeToBase64(finput);
+		return input.substr(0, start) + "base64," + b64;
+	}
+
 	_unpackParams(...params: any[]) {
 		let [name, url, options, cb] = params;
 		// special case of an array of objects or urls
@@ -104,7 +127,6 @@ export class InlineLoader extends PIXI.Loader {
 		];
 	}
 
-
 	_resolveSpine(entry: any) {
 		if(!entry.options || !entry.options.metadata || !entry.options.metadata.data)
 			return;
@@ -125,7 +147,7 @@ export class InlineLoader extends PIXI.Loader {
 		const atlasRes = this.bundle[atlasPath].data.replace("data:text/plain;,","");
 		
 		const image = new Image();
-		image.src = imageRes;
+		image.src = this._b85tob64(imageRes);
 		entry.options.metadata.image = PIXI.BaseTexture.from(image);
 		entry.options.metadata.atlasRawData = atlasRes;
 	}
@@ -168,7 +190,7 @@ export class InlineLoader extends PIXI.Loader {
 					continue;
 				}
 
-				e.url = pack.data;
+				e.url = this._b85tob64(pack.data);
 				e.options = { ...e.options, metadata: pack};
 				if(pack.mime == MIME.JSON || pack.mime == MIME.TEXT){
 					e.options.loadType = RAW_TEXT_TYPE; 
