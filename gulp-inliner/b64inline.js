@@ -1,21 +1,26 @@
-//custom compressor
+//custom base64 or base85 compressor
+
 const through = require("through2");
 const PluginError = require("plugin-error");
-const Vinyl = require("vinyl");
 const path = require("path");
 const base85enc = require("./base85");
 
-const PLUGIN_NAME = "b64inliner";
+const PLUGIN_NAME = "baseCompressor";
 
-const mimes = {
-	json: { mime: "application/json" },
-	atlas: { mime: "text/plain" },
-	mp3: { mime: "audio/mp3", encode: true },
-	wav: { mime: "audio/wav", encode: true },
-	ogg: { mime: "audio/ogg", encode: true },
-	jpeg: { mime: "image/jpeg", encode: true },
-	jpg: { mime: "image/jpeg", encode: true },
-	png: { mime: "image/png", encode: true }
+const fileTypes = {
+
+	json: { mime: "application/json", noEncode: true },
+	atlas: { mime: "text/plain", noEncode: true },
+
+	//images
+	jpeg: { mime: "image/jpeg" },
+	jpg: { mime: "image/jpeg" },
+	png: { mime: "image/png" },
+
+	//audio
+	mp3: { mime: "audio/mp3" },
+	wav: { mime: "audio/wav" },
+	ogg: { mime: "audio/ogg" }
 };
 
 const normalize = input => {
@@ -29,23 +34,34 @@ const normalize = input => {
 	return input.replace(/\\/g, "/");
 };
 
-const jsonCompress = text =>{
+const jsonCompress = text => {
 	return text.replace(/\n|\r|\t|\f/g, "");
-}
+};
 
 const escape = text => {
-	return text.replace(/\'/g, "\\'")
-				.replace(/\\\\/g, "\\")
-				.replace(/\//g, "\/")
-				.replace(/\"/g, '\"')
-				.replace(/\r/g, "\\r")
-				.replace(/\t/g, "\\t")
-				.replace(/\n/g, "\\n")
-				.replace(/\f/g, "\\f");
+	return text
+		.replace(/\'/g, "\\'")
+		.replace(/\\\\/g, "\\")
+		.replace(/\//g, "/")
+		.replace(/\"/g, '"')
+		.replace(/\r/g, "\\r")
+		.replace(/\t/g, "\\t")
+		.replace(/\n/g, "\\n")
+		.replace(/\f/g, "\\f");
+};
+
+
+//characters from0x21 to 0x75, replace qu and \
+const escapeBase85 = text => {
+	return text
+		.replace(/\\/g, "w")
+		.replace(/`/g, "{")
+		.replace(/'/g, "|")
+		.replace(/"/g, "}");
 };
 
 const def_map = (entries, options) => {
-	let str = "";
+	let result = "";
 	for (let name in entries) {
 		const childs = entries[name] || {};
 		const data = Object.keys(childs)
@@ -62,93 +78,92 @@ const def_map = (entries, options) => {
 			.join(",\n");
 
 		if (options.es6) {
-			if (name == "default") str += `export default {\n${data}}`;
-			else str += `export const ${name} = {\n${data}}`;
+			if (name == "default") result += `export default {\n${data}}`;
+			else result += `export const ${name} = {\n${data}}`;
 		} else {
-			str += `const ${name} = {\n${data}}`;
+			result += `const ${name} = {\n${data}}`;
 		}
 	}
 
-	return str;
+	return result;
 };
 
-module.exports = function(
-	options = { groupname: "default", filename: "out.js", mapper: def_map, map_options: { es6: true, base: "base64" } }
-) {
-	const map_options = options.map_options || {base:"base64"};
+module.exports = function( options = {
+										groupname: "default",
+										filename: "out.js",
+										mapper: def_map,
+										map_options: { es6: true, base: "base64" } 
+									} )  
+	{
+
+	const map_options = options.map_options || { base: "base64", es6 : true };
 	const mapper = options.mapper || def_map;
 	const group = options.groupname || "default";
 	const fname = options.filename || "out.js";
+	
 	const data_buffer = {};
-	let latest;
+	let latestfile = undefined;
 
 	function collect(file, encoder, cb) {
-		latest = file;
-		let data = {};
-		data.path = normalize(path.relative(file.base, file.path));
-		data.name = normalize(file.basename);
+		
+		latestfile = file;
 
-		if (!data_buffer[group]) data_buffer[group] = {};
+		let data = {
+			path : normalize(path.relative(file.base, file.path)),
+			name : normalize(file.basename),
+			data : undefined,
+			mime : ""
+		};
 
-		if (data_buffer[group][data.path] || file.isNull()) {
+		if (!data_buffer[group])
+			data_buffer[group] = {};
+
+		if (data_buffer[group][data.path] || file.isNull()) 
 			return cb();
-		}
 
 		const ext = file.basename.split(".")[1];
-		const mime = mimes[ext];
+		const type = fileTypes[ext];
 
-		if (mime) {
-			data.mime = mime.mime;
+		if (!type) return cb();
 
-			if (file.isStream()) {
-				this.emit("error", new PluginError(PLUGIN_NAME, "Streams not supported!"));
-				return cb(null, file);
-			}
+		data.mime = type.mime;
 
-			if (file.isBuffer()) {
-				if (mime.encode) {
-					if(map_options.base !== "base64"){
-						let base85 = base85enc.fromByteArray(file.contents);
-						//characters from0x21 to 0x75, replace qu and \
-						base85 = base85
-								.replace(/\\/g,"w")
-								.replace(/`/g, "{")
-								.replace(/'/g, "|")
-								.replace(/"/g, "}");
-
-						data.data = `data:${mime.mime};base85,${base85}`;
-					} else {
-						data.data = `data:${mime.mime};base64,${file.contents.toString("base64")}`;
-					}
-				} else {
-					let text = new String(file.contents);
-					if(data.mime == "application/json"){
-						text = jsonCompress(text);
-					}
-					data.data = `data:${mime.mime};,${escape(text.toString())}`;
-					
-				}
-			}
-
-			data_buffer[group][data.path] = data;
+		if (file.isStream()) {
+			this.emit("error", new PluginError(PLUGIN_NAME, "Streams not supported!"));
+			return cb(null, file);
 		}
+
+		if (file.isBuffer()) {
+			if (!type.noEncode) {
+				if (map_options.base !== "base64") {
+
+					let base85 = base85enc.fromByteArray(file.contents);
+					base85 = escapeBase85(base85);
+					data.data = `data:${type.mime};base85,${base85}`;
+				} else {
+					data.data = `data:${type.mime};base64,${file.contents.toString("base64")}`;
+				}
+			} else {
+				let text = new String(file.contents);
+				if (data.mime == "application/json") {
+					text = jsonCompress(text);
+				}
+				data.data = `data:${type.mime};,${escape(text.toString())}`;
+			}
+		}
+
+		data_buffer[group][data.path] = data;
 
 		return cb();
 	}
 
 	function write(cb) {
-		if (latest.isNull()) {
+		if (latestfile.isNull() || !data_buffer) 
 			return cb();
-		}
 
 		const mapped_data = mapper(data_buffer, map_options);
+		const file = latestfile.clone({ contents: false });
 
-		if (!data_buffer) {
-			this.emit("error", new PluginError(PLUGIN_NAME, "Call caollect before write for collecting file dataset!"));
-			return cb();
-		}
-
-		const file = latest.clone({ contents: false });
 		file.path = path.join(file.base, fname);
 		file.contents = Buffer.from(mapped_data);
 		return cb(null, file);
