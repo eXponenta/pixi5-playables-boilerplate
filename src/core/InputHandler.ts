@@ -1,4 +1,3 @@
-import { Controls } from "../shared/ui/Controls";
 import { KeyInputHandler } from "../pixi-utils/InputHandler";
 
 enum Direction {
@@ -21,7 +20,7 @@ const MAX_TILT = 3;
 export class InputHandler {
 	private _axis: PIXI.Point = new PIXI.Point();
 
-	mobileControlls: Controls;
+	mobileControlls: any;
 	useMobile: boolean = false;
 	useAccel: boolean = false;
 	

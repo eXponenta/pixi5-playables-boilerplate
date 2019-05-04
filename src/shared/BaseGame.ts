@@ -1,4 +1,3 @@
-import { APIData } from '../shared/APIData';
 import { App } from "..";
 import { StateBech } from "../core/StateBech";
 import { InputHandler } from './../core/inputHandler';
@@ -21,22 +20,21 @@ export class BaseGame implements IScene {
 	lang: ITextBase;
 	stage: PIXI.Container;
 	loader: PIXI.Loader;
-	apiData: APIData;
 	app: App;
 	gameState: StateBech<GameState> = new StateBech();
 	input: InputHandler;
 
 	protected _isPaused: boolean = false;
 
-	init(app: App): void {
+	constructor(app: App) {
 		this.app = app;
-		this.apiData.submitState({type: "init"});
+	}
+
+	init(): void {
+		console.log(this.loader);
 	}
 
 	start(): void {
-		this.apiData.submitState( {
-			type: "start"
-		});
 	}
 	
 	preload(loader?: PIXI.Loader): PIXI.Loader{

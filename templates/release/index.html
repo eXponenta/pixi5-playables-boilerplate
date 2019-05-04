@@ -11,8 +11,6 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 		<title>BaseApp</title>
 		<script src="./pixi.min.js"></script>
-
-		<link rel="stylesheet" href="./../res/ui/fonts/styles.css" />
 		<style>
 			html,
 			body {
@@ -30,7 +28,7 @@
 				height: 100%;
 			}
 			#app > canvas {
-				height: 100%;
+				width: 100%;
 				margin: auto;
 			}
 
@@ -81,7 +79,7 @@
 
 		<script>
 		    window.onload = function() {
-                const app = window.app = new GamesFromHell(document.querySelector("#app"));
+                const app = window.app = new App(document.querySelector("#app"));
                 app.load();
 			}
 

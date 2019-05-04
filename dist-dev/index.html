@@ -9,9 +9,7 @@
     <title>BaseApp</title>
     <script src="./pixi.js"></script>
     <script src="./pixi-tiled.js"></script>
-    <script src="./pixi-spine.js"></script>
 
-    <link rel="stylesheet" href="./../res/ui/fonts/styles.css">
     <style>
         html, body {
             padding: 0;
@@ -28,21 +26,20 @@
             height: 100%;
         }
         #app > canvas {
-            height: 100%;
+            width: 100%;
             margin: auto;
         }
 
     </style>
 </head>
 <body>
-    <div style=" visibility: hidden; position: absolute; font-family: 'Carter One MultiCyr'">Font loader hook</div>
     
     <div id = "app"></div>
     <script src="./bundle-dev.js"></script>
     
     <script>
 
-        const app = new GamesFromHell(document.querySelector("#app"));
+        const app = new App(document.querySelector("#app"));
         app.load();
 
     </script>

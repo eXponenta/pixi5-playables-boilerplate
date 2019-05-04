@@ -161,5 +161,4 @@ gulp.task("default", watch_tsc);
 gulp.task("watch", watch_tsc);
 gulp.task("debug", debug);
 gulp.task("inline", inline);
-gulp.task("release", gulp.series('clear-release', 'res-release', 'bundle-release', 'pack-release'));
-gulp.task("release-inline", gulp.series("tob64", 'clear-release', 'bundle-release', 'pack-release', "inline"));
+gulp.task("release", gulp.series("tob64", 'clear-release', 'bundle-release', 'pack-release', "inline"));

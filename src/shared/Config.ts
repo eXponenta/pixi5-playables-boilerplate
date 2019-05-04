@@ -1,11 +1,11 @@
 export const Config = {
 
 	ReferenceSize: {
-		width: 1080,
-		height: 1720,
+		width: 1390,
+		height: 640,
 		resolution: 1//window.devicePixelRatio
 	},
-	AllowAudio: true,
+	AllowAudio: false,
 	PausedInBackground: true,
 	TextStyle : {
 		fontSize: 32,
