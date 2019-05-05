@@ -1,3 +1,0 @@
-cd GamesFromHell
-git pull
-gulp release-fake
