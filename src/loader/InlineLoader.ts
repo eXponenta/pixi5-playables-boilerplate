@@ -1,4 +1,4 @@
-import { decodeToBase64 } from './Base85encoder';
+import { decodeToBase64 } from "./Base85encoder";
 
 export interface IPacket {
 	data: string;
@@ -13,9 +13,9 @@ export interface BundledResources extends PIXI.LoaderResource {
 
 export type IBundle = { [key: string]: IPacket };
 const MIME = {
-	JSON : "application/json",
-	TEXT : "plain/text"
-}
+	JSON: "application/json",
+	TEXT: "plain/text"
+};
 //path pixi loader
 const RAW_TEXT_TYPE = 666;
 
@@ -25,13 +25,12 @@ const _orig = PIXI.LoaderResource.prototype._loadXhr;
 //@ts-ignore
 PIXI.LoaderResource.prototype._loadXhr = function() {
 	const type = this._determineXhrType();
-	if(this.loadType == RAW_TEXT_TYPE){
-
-		let text:string = this.metadata.data || this.url;
+	if (this.loadType == RAW_TEXT_TYPE) {
+		let text: string = this.metadata.data || this.url;
 		text = text.replace(/data:(.*?)\,/g, "");
 
-		if(type == "json") {
-			this.data = JSON.parse(unescape(text))
+		if (type == "json") {
+			this.data = JSON.parse(unescape(text));
 			this.type = PIXI.LoaderResource.TYPE.JSON;
 		} else {
 			this.type = PIXI.LoaderResource.TYPE.TEXT;
@@ -41,7 +40,7 @@ PIXI.LoaderResource.prototype._loadXhr = function() {
 		return this.complete();
 	}
 	_orig.call(this);
-}
+};
 
 const unescape = (text: string) => {
 	return text.replace(/\'/g, "'").replace(/\n/g, "\\n");
@@ -65,26 +64,8 @@ export class InlineLoader extends PIXI.Loader {
 	_b85tob64(input: string) {
 		const start = input.indexOf(";") + 1;
 		const s = input.substr(start, 6).trim();
-		if(s !== "base85") return input;
-		/*
-			.replace(/\\/g,"w")
-			.replace(/`/g, "{")
-			.replace(/'/g, "|")
-			.replace(/"/g, "}");
-		*/
-		/*let finput = input
-				.substr(start + 7)
-				.replace(/w/g, "\\")
-				.replace(/\{/g,"\`" )
-				.replace(/\|/g, "\'")
-				.replace(/\}/g,"\"");*/
-
-		const b64 = decodeToBase64(input,{
-			skip: start + 7, 
-			map: {
-				"w":"\\", "{":"\`", "|" : "\'", "}" : "\""
-			}
-		});
+		if (s !== "base85") return input;
+		const b64 = decodeToBase64(input, start + 7);
 		return input.substr(0, start) + "base64," + b64;
 	}
 
@@ -92,8 +73,7 @@ export class InlineLoader extends PIXI.Loader {
 		let [name, url, options, cb] = params;
 		// special case of an array of objects or urls
 		if (Array.isArray(name)) {
-			if(typeof name[0] == "string")
-				return name.map( e => ({name: e, url : e}));
+			if (typeof name[0] == "string") return name.map(e => ({ name: e, url: e }));
 			return name;
 		}
 
@@ -125,7 +105,7 @@ export class InlineLoader extends PIXI.Loader {
 		return [
 			{
 				name,
-				url : url || name,
+				url: url || name,
 				options,
 				callback: cb
 			}
@@ -133,24 +113,21 @@ export class InlineLoader extends PIXI.Loader {
 	}
 
 	_resolveSpine(entry: any) {
-		if(!entry.options || !entry.options.metadata || !entry.options.metadata.data)
-			return;
+		if (!entry.options || !entry.options.metadata || !entry.options.metadata.data) return;
 		const pack = entry.options.metadata as IPacket;
-		if(pack.mime != "application/json")
-			return;
+		if (pack.mime != "application/json") return;
 
-		const text = pack.data.replace("data:application/json;,","");
+		const text = pack.data.replace("data:application/json;,", "");
 		const json = JSON.parse(unescape(text));
-		if(!json.bones)
-			return;
-		
+		if (!json.bones) return;
+
 		const path = pack.path;
 		const atlasPath = path.replace(".json", ".atlas");
 		const imagePath = path.replace(".json", ".png");
-		
+
 		const imageRes = this.bundle[imagePath].data;
-		const atlasRes = this.bundle[atlasPath].data.replace("data:text/plain;,","");
-		
+		const atlasRes = this.bundle[atlasPath].data.replace("data:text/plain;,", "");
+
 		const image = new Image();
 		image.src = this._b85tob64(imageRes);
 		entry.options.metadata.image = PIXI.BaseTexture.from(image);
@@ -164,41 +141,36 @@ export class InlineLoader extends PIXI.Loader {
 		//this._resolveSpine(entry);
 
 		const parent: PIXI.LoaderResource = (entry.options || {}).parentResource;
-		if (!parent)
-			return entry;
-		
-		
+		if (!parent) return entry;
+
 		const pack = parent.metadata as IPacket;
 		if (!pack || !pack.data) return entry;
-		
+
 		// не требует разрешения url, уже валидно
-		if (entry.url.indexOf("data:") > -1)
-			return entry;
-		
+		if (entry.url.indexOf("data:") > -1) return entry;
+
 		entry.url = basePath(pack.path) + entry.url;
 
 		return entry;
 	}
 
 	add(...params: any[]) {
-		const entry = this._unpackParams(...params).map( (e) => this._resolve(e));
+		const entry = this._unpackParams(...params).map(e => this._resolve(e));
 
 		for (let e of entry) {
-			
 			if (e.url.indexOf("data:") == -1) {
-				
 				const path = trimPath(e.url);
 				const pack = this.bundle[path];
-				
+
 				if (!pack) {
 					console.log("Missing res in bundle", e);
 					continue;
 				}
 
 				e.url = this._b85tob64(pack.data);
-				e.options = { ...e.options, metadata: pack};
-				if(pack.mime == MIME.JSON || pack.mime == MIME.TEXT){
-					e.options.loadType = RAW_TEXT_TYPE; 
+				e.options = { ...e.options, metadata: pack };
+				if (pack.mime == MIME.JSON || pack.mime == MIME.TEXT) {
+					e.options.loadType = RAW_TEXT_TYPE;
 				}
 			}
 

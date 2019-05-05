@@ -1,6 +1,8 @@
 const { StringDecoder} = require('string_decoder');
 const {TextEncoder} = require('util');
 
+const ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#";
+
 "use strict";
 var ascii85 = (function() {
 	const TUPLE_BITS = [24, 16, 8, 0];
@@ -18,7 +20,7 @@ var ascii85 = (function() {
 
 			for (let i = 4; i >= 0; i--) {
 				if (i <= bytes) {
-					output[i] = (d % 85) + 0x21; // 0x21 = '!'
+					output[i] =  ALPHABET.charCodeAt(d % 85); //d % 85) + 0x21; // 0x21 = '!'
 				}
 
 				d /= 85;
@@ -28,14 +30,9 @@ var ascii85 = (function() {
 		return output;
 	}
 
-	function fromByteArray(byteArray, useEOD = true) {
+	function fromByteArray(byteArray) {
         let output = [];
         
-		if (useEOD) {
-			output.push(0x3c); // <
-			output.push(0x7e); // ~
-		}
-
 		for (let i = 0; i < byteArray.length; i += 4) {
 			let tuple = new Uint8Array(4);
 			let bytes = 4;
@@ -54,32 +51,11 @@ var ascii85 = (function() {
 				output.push(chunk[j]);
 			}
 		}
-
-		if (useEOD) {
-			output.push(0x7e); // ~
-			output.push(0x3e); // >
-        }
-        
 		return new StringDecoder("utf8").write(Buffer.from(output));
 	}
 
 	function encode(text) {
-		let charset = "UTF-8";
-		let useEOD = true;
-
-		if (arguments.length > 1) {
-			if (typeof arguments[1] == "string") {
-				charset = arguments[1];
-
-				if (arguments.length > 2) {
-					useEOD = !!arguments[2];
-				}
-			} else {
-				useEOD = !!arguments[1];
-			}
-		}
-
-		return fromByteArray(new TextEncoder().encode(text), useEOD);
+		return fromByteArray(new TextEncoder().encode(text));
 	}
 
 	function getByteArrayPart(tuple, bytes = 4) {

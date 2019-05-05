@@ -138,7 +138,7 @@ module.exports = function( options = {
 				if (map_options.base !== "base64") {
 
 					let base85 = base85enc.fromByteArray(file.contents);
-					base85 = escapeBase85(base85);
+					//base85 = escapeBase85(base85);
 					data.data = `data:${type.mime};base85,${base85}`;
 				} else {
 					data.data = `data:${type.mime};base64,${file.contents.toString("base64")}`;

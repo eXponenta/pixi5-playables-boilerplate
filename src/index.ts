@@ -87,7 +87,10 @@ export class App extends Application {
 		await M2.Delay(1);
 		
 		const game = new Playable(this);
+		
+		const start = performance.now();
 		await game.preload(this.loader).loadAsync();
+		console.log("loading:", performance.now() - start);
 		this.start(game);
 	}
 
