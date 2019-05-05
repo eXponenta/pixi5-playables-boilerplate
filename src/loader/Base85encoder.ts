@@ -9,11 +9,23 @@ const getPart= (tuple: number, bytes = 4) => {
 	return output;
 }
 
-export function decodeToByteArray(text: string) {
+export interface DecodeOptions {
+	skip? : number;
+	map?: {[key: string]: string};
+}
+
+export function decodeToByteArray(text: string, options : DecodeOptions = {}) {
 	const pushPart = () => {
 		getPart(tuple, tupleIndex - 1).forEach((e)=> output.push(e));
 		tuple = tupleIndex = 0;
 	}
+
+	const charMap = Object.keys(options.map || {}).reduce((acc : number[], e: string)=>{
+		acc[e.charCodeAt(0)] = options.map[e].charCodeAt(0);
+		return acc;
+	},new Array<number>());
+
+	console.log(charMap);
 
 	let output = [];
     let stop = false;
@@ -21,12 +33,16 @@ export function decodeToByteArray(text: string) {
 	let tuple = 0;
 	let tupleIndex = 0;
 
-	let i = text.startsWith("<~") && text.length > 2 ? 2 : 0;
+	let i = (~~options.skip);// (text.startsWith("<~") && text.length > 2 ? 2 : 0) ;
+	if(text[i] == "<" && text[i + 1] == "~") 
+		i += 2;
+
 	do {
 		// Skip whitespace
 		if (text.charAt(i).trim().length === 0) continue;
 
 		let charCode = text.charCodeAt(i);
+		charCode = charMap[charCode] || charCode;
 
 		switch (charCode) {
 			case 0x7a: // z
@@ -71,7 +87,7 @@ export function decodeToByteArray(text: string) {
 	return new Uint8Array(output);
 }
 
-export function decodeToBase64(input: string) {
-	const buff = decodeToByteArray(input);
+export function decodeToBase64(input: string, options : DecodeOptions) {
+	const buff = decodeToByteArray(input, options as any);
 	return btoa(Array.prototype.map.call(buff, (e:number) => String.fromCharCode(e)).join(""));
 }

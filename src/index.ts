@@ -6,14 +6,12 @@ import { IScene } from "./core/IScene";
 
 import TWEEN from "@tweenjs/tween.js";
 import { Config } from './shared/Config';
-//import Resources from "./inline/resources";
 
-//import { InlineLoader} from "./loader/InlineLoader";
+import Resources from "./inline/resources";
+
+import { InlineLoader} from "./loader/InlineLoader";
 import { M2 } from "./shared/M2";
-
 import { Playable } from './playable/index';
-import { Assets } from './playable/Assets';
-
 
 export class App extends Application {
 	static instance: App;
@@ -63,9 +61,14 @@ export class App extends Application {
 
  	async load() {
 		
-		//this.loader = new InlineLoader(Resources);
-		this.loader = new PIXI.Loader();
-		this.loader.baseUrl = Config.BaseResDir;
+		// @ifdef DEBUG
+		this.loader =  new PIXI.Loader(Config.BaseResDir);
+		// @endif
+		// @ifndef DEBUG
+		this.loader = new InlineLoader(Resources);
+		// @endif
+
+
 		//@ts-ignore 
 		this.init();
 	}
@@ -94,7 +97,7 @@ export class App extends Application {
 		this._currentScene.init();
 
 		this.stage.addChildAt(this._currentScene.stage, 0);
-		
+		this._currentScene.start();
 		this.resume();
 		super.start();
 	}

@@ -15,8 +15,6 @@ let rm = require('gulp-rename');
 
 const b64inliner = require("./gulp-inliner/b64inline");
 
-
-
 let paths = {
     entries: ["src/index.ts"],
     vendors:[
@@ -70,7 +68,7 @@ gulp.task('bundle-release', ()=> {
 			.pipe(gulp.dest("dist"));
 });
 
-gulp.task('bundle-release-fake', ()=> {
+gulp.task('bundle-release-nl', ()=> {
     return brows_pipe
             .bundle()
             .pipe(source("bundle.js"))
@@ -79,7 +77,7 @@ gulp.task('bundle-release-fake', ()=> {
             .pipe(preprocess({
                 context:{
                     RES_PATH : "./res",
-                    FAKEAPI : true
+                    DEBUG : true
                 }}
             ))
 			.pipe(gulp.dest("dist"));
@@ -100,14 +98,13 @@ function debug(){
     gulp.src(paths.vendors_dev).pipe(gulp.dest('dist-dev'));
 	 
     return brows_pipe
-    
         .on('error', gutil.log)
         .bundle()
         .on('error', gutil.log)
         .pipe(source("bundle-dev.js"))
         .pipe(buffer())
         //@ts-ignore
-        .pipe(preprocess({context:{RES_PATH : '', FAKEAPI : true}}))
+        .pipe(preprocess({context:{RES_PATH : '', DEBUG : true}}))
         .on('error', gutil.log)
 		.pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(sourcemaps.write("./"))

@@ -72,14 +72,19 @@ export class InlineLoader extends PIXI.Loader {
 			.replace(/'/g, "|")
 			.replace(/"/g, "}");
 		*/
-		let finput = input
+		/*let finput = input
 				.substr(start + 7)
 				.replace(/w/g, "\\")
 				.replace(/\{/g,"\`" )
 				.replace(/\|/g, "\'")
-				.replace(/\}/g,"\"");
+				.replace(/\}/g,"\"");*/
 
-		const b64 = decodeToBase64(finput);
+		const b64 = decodeToBase64(input,{
+			skip: start + 7, 
+			map: {
+				"w":"\\", "{":"\`", "|" : "\'", "}" : "\""
+			}
+		});
 		return input.substr(0, start) + "base64," + b64;
 	}
 
