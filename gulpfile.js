@@ -27,6 +27,7 @@ let paths = {
         "./pixiv5/pixi-tiled.js",
         "./pixiv5/pixi-spine.js",
         "./pixiv5/pixi-tiled.js.map",
+        "./templates/debug/index.html"
     ],
     concats: [
         "./pixiv5/pixi-tiled.js",
@@ -123,9 +124,10 @@ const watch_tsc = () => {
 
     gutil.log("==Watch==");
 
-    gulp.watch("./dist-dev/index.html", {delay: 2000}, function updateHtml(){
-        return gulp.src('./dist-dev/index.html')
-                .pipe(connect.reload());
+    gulp.watch("./templates/debug/index.html", {delay: 2000}, function updateHtml(){
+       
+        gulp.src(["./templates/debug/index.html"]).pipe(gulp.dest("./dist-dev/"))
+        return gulp.src(['./dist-dev/index.html']).pipe(connect.reload());
     });
 
 	gulp.watch("./src/**/*.ts", {delay: 2000}, function compile(){
@@ -140,7 +142,7 @@ const tob64 = ()=> {
     return gulp
             .src(paths.res)
             //@ts-ignore
-            .pipe(b64inliner({filename: "resources.ts", map_options:{es6: true, base:"base85"}}))
+            .pipe(b64inliner({filename: "resources.ts", map_options:{es6: true, base:"base64"}}))
             .pipe(gulp.dest("./src/inline"));
 }
 

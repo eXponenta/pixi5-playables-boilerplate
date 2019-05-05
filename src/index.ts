@@ -3,15 +3,14 @@ import ActivateUtils from "./pixi-utils";
 
 import { Application } from "./core/Application";
 import { IScene } from "./core/IScene";
+import { Config } from './shared/Config';
+import { InlineLoader} from "./loader/InlineLoader";
+import { Playable } from './playable/index';
 
 import TWEEN from "@tweenjs/tween.js";
-import { Config } from './shared/Config';
 
+//how ignore it in DEBUG?
 import Resources from "./inline/resources";
-
-import { InlineLoader} from "./loader/InlineLoader";
-import { M2 } from "./shared/M2";
-import { Playable } from './playable/index';
 
 export class App extends Application {
 	static instance: App;
@@ -67,30 +66,14 @@ export class App extends Application {
 		// @ifndef DEBUG
 		this.loader = new InlineLoader(Resources);
 		// @endif
-
-
-		//@ts-ignore 
-		this.init();
-	}
-
-	private async init() {
-
+	
 		this._init = true;
-		this.preparedStart();
-		this.emit("loaded");	
-	}
-
-	async preparedStart() {
-		if(!this._init)
-			throw Error("App can't init!");
-
-		await M2.Delay(1);
-		
 		const game = new Playable(this);
-		
+
 		const start = performance.now();
 		await game.preload(this.loader).loadAsync();
 		console.log("loading:", performance.now() - start);
+
 		this.start(game);
 	}
 
