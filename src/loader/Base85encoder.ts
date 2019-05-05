@@ -8,6 +8,11 @@ const charToByte85 = Array.from(z85chars).reduce((acc, e, index)=>{
 	return acc;
 }, []);
 
+const byte2Blob = (array : Uint8Array) => {
+	const b = new Blob([array]);
+	return URL.createObjectURL(b);
+}
+
 const byte2Base64 = (array: Uint8Array) => {
 	const step = 1000;
 	const size = array.length;
@@ -20,7 +25,7 @@ const byte2Base64 = (array: Uint8Array) => {
 	return btoa(res.join(""));
 }
 
-export function decodeToBase64(text: string, skip = 0) {
+export function decode85(text: string, skip = 0, blob = false) {
 
 	const size = Math.ceil( (text.length - skip) * 4 / 5);
 	let output = new Uint8Array(size);
@@ -54,6 +59,8 @@ export function decodeToBase64(text: string, skip = 0) {
 		pushPart();
 	}
 
+	if(blob)
+		return byte2Blob(output);
 	return byte2Base64(output);
 }
 

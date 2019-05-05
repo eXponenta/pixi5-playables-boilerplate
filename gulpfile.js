@@ -142,7 +142,7 @@ const tob64 = ()=> {
     return gulp
             .src(paths.res)
             //@ts-ignore
-            .pipe(b64inliner({filename: "resources.ts", map_options:{es6: true, base:"base64"}}))
+            .pipe(b64inliner({filename: "resources.ts", map_options:{es6: true, base:"base85"}}))
             .pipe(gulp.dest("./src/inline"));
 }
 

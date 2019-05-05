@@ -1,4 +1,4 @@
-import { decodeToBase64 } from "./Base85encoder";
+import { decode85 } from "./Base85encoder";
 
 export interface IPacket {
 	data: string;
@@ -16,8 +16,12 @@ const MIME = {
 	JSON: "application/json",
 	TEXT: "plain/text"
 };
+
 //path pixi loader
 const RAW_TEXT_TYPE = 666;
+
+//not work yet
+const USE_BLOB_FOR_85 = false;
 
 //@ts-ignore
 const _orig = PIXI.LoaderResource.prototype._loadXhr;
@@ -65,7 +69,10 @@ export class InlineLoader extends PIXI.Loader {
 		const start = input.indexOf(";") + 1;
 		const s = input.substr(start, 6).trim();
 		if (s !== "base85") return input;
-		const b64 = decodeToBase64(input, start + 7);
+		
+		const b64 = decode85(input, start + 7, USE_BLOB_FOR_85);
+		if(USE_BLOB_FOR_85)
+			return b64;
 		return input.substr(0, start) + "base64," + b64;
 	}
 
