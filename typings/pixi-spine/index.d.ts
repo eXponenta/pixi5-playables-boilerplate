@@ -4,22 +4,23 @@ declare module PIXI.spine.core {
         timelines: Array<Timeline>;
         duration: number;
         constructor(name: string, timelines: Array<Timeline>, duration: number);
-        apply(skeleton: Skeleton, lastTime: number, time: number, loop: boolean, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, loop: boolean, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
         static binarySearch(values: ArrayLike<number>, target: number, step?: number): number;
         static linearSearch(values: ArrayLike<number>, target: number, step: number): number;
     }
     interface Timeline {
-        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
         getPropertyId(): number;
     }
-    enum MixPose {
+    enum MixBlend {
         setup = 0,
-        current = 1,
-        currentLayered = 2,
+        first = 1,
+        replace = 2,
+        add = 3
     }
     enum MixDirection {
         in = 0,
-        out = 1,
+        out = 1
     }
     enum TimelineType {
         rotate = 0,
@@ -36,7 +37,7 @@ declare module PIXI.spine.core {
         pathConstraintPosition = 11,
         pathConstraintSpacing = 12,
         pathConstraintMix = 13,
-        twoColor = 14,
+        twoColor = 14
     }
     abstract class CurveTimeline implements Timeline {
         static LINEAR: number;
@@ -52,7 +53,7 @@ declare module PIXI.spine.core {
         getCurveType(frameIndex: number): number;
         setCurve(frameIndex: number, cx1: number, cy1: number, cx2: number, cy2: number): void;
         getCurvePercent(frameIndex: number, percent: number): number;
-        abstract apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        abstract apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class RotateTimeline extends CurveTimeline {
         static ENTRIES: number;
@@ -64,7 +65,7 @@ declare module PIXI.spine.core {
         constructor(frameCount: number);
         getPropertyId(): number;
         setFrame(frameIndex: number, time: number, degrees: number): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class TranslateTimeline extends CurveTimeline {
         static ENTRIES: number;
@@ -78,17 +79,17 @@ declare module PIXI.spine.core {
         constructor(frameCount: number);
         getPropertyId(): number;
         setFrame(frameIndex: number, time: number, x: number, y: number): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class ScaleTimeline extends TranslateTimeline {
         constructor(frameCount: number);
         getPropertyId(): number;
-        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class ShearTimeline extends TranslateTimeline {
         constructor(frameCount: number);
         getPropertyId(): number;
-        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class ColorTimeline extends CurveTimeline {
         static ENTRIES: number;
@@ -106,7 +107,7 @@ declare module PIXI.spine.core {
         constructor(frameCount: number);
         getPropertyId(): number;
         setFrame(frameIndex: number, time: number, r: number, g: number, b: number, a: number): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class TwoColorTimeline extends CurveTimeline {
         static ENTRIES: number;
@@ -130,7 +131,7 @@ declare module PIXI.spine.core {
         constructor(frameCount: number);
         getPropertyId(): number;
         setFrame(frameIndex: number, time: number, r: number, g: number, b: number, a: number, r2: number, g2: number, b2: number): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class AttachmentTimeline implements Timeline {
         slotIndex: number;
@@ -140,7 +141,7 @@ declare module PIXI.spine.core {
         getPropertyId(): number;
         getFrameCount(): number;
         setFrame(frameIndex: number, time: number, attachmentName: string): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class DeformTimeline extends CurveTimeline {
         slotIndex: number;
@@ -150,7 +151,7 @@ declare module PIXI.spine.core {
         constructor(frameCount: number);
         getPropertyId(): number;
         setFrame(frameIndex: number, time: number, vertices: ArrayLike<number>): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class EventTimeline implements Timeline {
         frames: ArrayLike<number>;
@@ -159,7 +160,7 @@ declare module PIXI.spine.core {
         getPropertyId(): number;
         getFrameCount(): number;
         setFrame(frameIndex: number, event: Event): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class DrawOrderTimeline implements Timeline {
         frames: ArrayLike<number>;
@@ -168,21 +169,25 @@ declare module PIXI.spine.core {
         getPropertyId(): number;
         getFrameCount(): number;
         setFrame(frameIndex: number, time: number, drawOrder: Array<number>): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class IkConstraintTimeline extends CurveTimeline {
         static ENTRIES: number;
         static PREV_TIME: number;
         static PREV_MIX: number;
         static PREV_BEND_DIRECTION: number;
+        static PREV_COMPRESS: number;
+        static PREV_STRETCH: number;
         static MIX: number;
         static BEND_DIRECTION: number;
+        static COMPRESS: number;
+        static STRETCH: number;
         ikConstraintIndex: number;
         frames: ArrayLike<number>;
         constructor(frameCount: number);
         getPropertyId(): number;
-        setFrame(frameIndex: number, time: number, mix: number, bendDirection: number): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        setFrame(frameIndex: number, time: number, mix: number, bendDirection: number, compress: boolean, stretch: boolean): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class TransformConstraintTimeline extends CurveTimeline {
         static ENTRIES: number;
@@ -200,7 +205,7 @@ declare module PIXI.spine.core {
         constructor(frameCount: number);
         getPropertyId(): number;
         setFrame(frameIndex: number, time: number, rotateMix: number, translateMix: number, scaleMix: number, shearMix: number): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class PathConstraintPositionTimeline extends CurveTimeline {
         static ENTRIES: number;
@@ -212,12 +217,12 @@ declare module PIXI.spine.core {
         constructor(frameCount: number);
         getPropertyId(): number;
         setFrame(frameIndex: number, time: number, value: number): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class PathConstraintSpacingTimeline extends PathConstraintPositionTimeline {
         constructor(frameCount: number);
         getPropertyId(): number;
-        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
     class PathConstraintMixTimeline extends CurveTimeline {
         static ENTRIES: number;
@@ -231,7 +236,7 @@ declare module PIXI.spine.core {
         constructor(frameCount: number);
         getPropertyId(): number;
         setFrame(frameIndex: number, time: number, rotateMix: number, translateMix: number): void;
-        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, pose: MixPose, direction: MixDirection): void;
+        apply(skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection): void;
     }
 }
 declare module PIXI.spine.core {
@@ -239,15 +244,14 @@ declare module PIXI.spine.core {
         static emptyAnimation: Animation;
         static SUBSEQUENT: number;
         static FIRST: number;
-        static DIP: number;
-        static DIP_MIX: number;
+        static HOLD: number;
+        static HOLD_MIX: number;
         data: AnimationStateData;
         tracks: TrackEntry[];
         events: Event[];
         listeners: AnimationStateListener2[];
         queue: EventQueue;
         propertyIDs: IntSet;
-        mixingTo: TrackEntry[];
         animationsChanged: boolean;
         timeScale: number;
         trackEntryPool: Pool<TrackEntry>;
@@ -255,8 +259,8 @@ declare module PIXI.spine.core {
         update(delta: number): void;
         updateMixingFrom(to: TrackEntry, delta: number): boolean;
         apply(skeleton: Skeleton): boolean;
-        applyMixingFrom(to: TrackEntry, skeleton: Skeleton, currentPose: MixPose): number;
-        applyRotateTimeline(timeline: Timeline, skeleton: Skeleton, time: number, alpha: number, pose: MixPose, timelinesRotation: Array<number>, i: number, firstFrame: boolean): void;
+        applyMixingFrom(to: TrackEntry, skeleton: Skeleton, blend: MixBlend): number;
+        applyRotateTimeline(timeline: Timeline, skeleton: Skeleton, time: number, alpha: number, blend: MixBlend, timelinesRotation: Array<number>, i: number, firstFrame: boolean): void;
         queueEvents(entry: TrackEntry, animationTime: number): void;
         clearTracks(): void;
         clearTrack(trackIndex: number): void;
@@ -272,6 +276,8 @@ declare module PIXI.spine.core {
         trackEntry(trackIndex: number, animation: Animation, loop: boolean, last: TrackEntry): TrackEntry;
         disposeNext(entry: TrackEntry): void;
         _animationsChanged(): void;
+        setTimelineModes(entry: TrackEntry): void;
+        hasTimeline(entry: TrackEntry, id: number): boolean;
         getCurrent(trackIndex: number): TrackEntry;
         addListener(listener: AnimationStateListener2): void;
         removeListener(listener: AnimationStateListener2): void;
@@ -293,9 +299,11 @@ declare module PIXI.spine.core {
         animation: Animation;
         next: TrackEntry;
         mixingFrom: TrackEntry;
+        mixingTo: TrackEntry;
         listener: AnimationStateListener2;
         trackIndex: number;
         loop: boolean;
+        holdPrevious: boolean;
         eventThreshold: number;
         attachmentThreshold: number;
         drawOrderThreshold: number;
@@ -314,12 +322,11 @@ declare module PIXI.spine.core {
         mixDuration: number;
         interruptAlpha: number;
         totalAlpha: number;
-        timelineData: number[];
-        timelineDipMix: TrackEntry[];
+        mixBlend: MixBlend;
+        timelineMode: number[];
+        timelineHoldMix: TrackEntry[];
         timelinesRotation: number[];
         reset(): void;
-        setTimelineData(to: TrackEntry, mixingToArray: Array<TrackEntry>, propertyIDs: IntSet): TrackEntry;
-        hasTimeline(id: number): boolean;
         getAnimationTime(): number;
         setAnimationLast(animationLast: number): void;
         isComplete(): boolean;
@@ -356,7 +363,7 @@ declare module PIXI.spine.core {
         end = 2,
         dispose = 3,
         complete = 4,
-        event = 5,
+        event = 5
     }
     interface AnimationStateListener2 {
         start?(entry: TrackEntry): void;
@@ -434,7 +441,7 @@ declare module PIXI.spine.core {
         Mesh = 2,
         LinkedMesh = 3,
         Path = 4,
-        Point = 5,
+        Point = 5
     }
 }
 declare module PIXI.spine.core {
@@ -454,7 +461,7 @@ declare module PIXI.spine.core {
     class MeshAttachment extends VertexAttachment {
         region: TextureRegion;
         path: string;
-        regionUVs: ArrayLike<number>;
+        regionUVs: Float32Array;
         uvs: ArrayLike<number>;
         triangles: Array<number>;
         color: Color;
@@ -463,7 +470,6 @@ declare module PIXI.spine.core {
         inheritDeform: boolean;
         tempColor: Color;
         constructor(name: string);
-        updateUVs(region: TextureRegion, uvs: ArrayLike<number>): ArrayLike<number>;
         applyDeform(sourceAttachment: VertexAttachment): boolean;
         getParentMesh(): MeshAttachment;
         setParentMesh(parentMesh: MeshAttachment): void;
@@ -556,7 +562,7 @@ declare module PIXI.spine.core {
         Normal = 0,
         Additive = 1,
         Multiply = 2,
-        Screen = 3,
+        Screen = 3
     }
 }
 declare module PIXI.spine.core {
@@ -623,7 +629,7 @@ declare module PIXI.spine.core {
         OnlyTranslation = 1,
         NoRotationOrReflection = 2,
         NoScale = 3,
-        NoScaleOrReflection = 4,
+        NoScaleOrReflection = 4
     }
 }
 declare module PIXI.spine.core {
@@ -638,6 +644,8 @@ declare module PIXI.spine.core {
         floatValue: number;
         stringValue: string;
         time: number;
+        volume: number;
+        balance: number;
         constructor(time: number, data: EventData);
     }
 }
@@ -647,6 +655,9 @@ declare module PIXI.spine.core {
         intValue: number;
         floatValue: number;
         stringValue: string;
+        audioPath: string;
+        volume: number;
+        balance: number;
         constructor(name: string);
     }
 }
@@ -655,14 +666,16 @@ declare module PIXI.spine.core {
         data: IkConstraintData;
         bones: Array<Bone>;
         target: Bone;
-        mix: number;
         bendDirection: number;
+        compress: boolean;
+        stretch: boolean;
+        mix: number;
         constructor(data: IkConstraintData, skeleton: Skeleton);
         getOrder(): number;
         apply(): void;
         update(): void;
-        apply1(bone: Bone, targetX: number, targetY: number, alpha: number): void;
-        apply2(parent: Bone, child: Bone, targetX: number, targetY: number, bendDir: number, alpha: number): void;
+        apply1(bone: Bone, targetX: number, targetY: number, compress: boolean, stretch: boolean, uniform: boolean, alpha: number): void;
+        apply2(parent: Bone, child: Bone, targetX: number, targetY: number, bendDir: number, stretch: boolean, alpha: number): void;
     }
 }
 declare module PIXI.spine.core {
@@ -672,6 +685,9 @@ declare module PIXI.spine.core {
         bones: BoneData[];
         target: BoneData;
         bendDirection: number;
+        compress: boolean;
+        stretch: boolean;
+        uniform: boolean;
         mix: number;
         constructor(name: string);
     }
@@ -681,6 +697,7 @@ declare module PIXI.spine.core {
         static NONE: number;
         static BEFORE: number;
         static AFTER: number;
+        static epsilon: number;
         data: PathConstraintData;
         bones: Array<Bone>;
         target: Slot;
@@ -722,17 +739,17 @@ declare module PIXI.spine.core {
     }
     enum PositionMode {
         Fixed = 0,
-        Percent = 1,
+        Percent = 1
     }
     enum SpacingMode {
         Length = 0,
         Fixed = 1,
-        Percent = 2,
+        Percent = 2
     }
     enum RotateMode {
         Tangent = 0,
         Chain = 1,
-        ChainScale = 2,
+        ChainScale = 2
     }
 }
 declare module PIXI.spine.core {
@@ -749,8 +766,8 @@ declare module PIXI.spine.core {
         skin: Skin;
         color: Color;
         time: number;
-        flipX: boolean;
-        flipY: boolean;
+        scaleX: number;
+        scaleY: number;
         x: number;
         y: number;
         constructor(data: SkeletonData);
@@ -772,7 +789,7 @@ declare module PIXI.spine.core {
         findSlot(slotName: string): Slot;
         findSlotIndex(slotName: string): number;
         setSkinByName(skinName: string): void;
-        setSkin(newSkin: Skin): void;
+        setSkin(newSkin: Skin | null): void;
         getAttachmentByName(slotName: string, attachmentName: string): Attachment;
         getAttachment(slotIndex: number, attachmentName: string): Attachment;
         setAttachment(slotName: string, attachmentName: string): void;
@@ -781,6 +798,9 @@ declare module PIXI.spine.core {
         findPathConstraint(constraintName: string): PathConstraint;
         getBounds(offset: Vector2, size: Vector2, temp: Array<number>): void;
         update(delta: number): void;
+        flipX: boolean;
+        flipY: boolean;
+        private static deprecatedWarning1;
     }
 }
 declare module PIXI.spine.core {
@@ -943,12 +963,12 @@ declare module PIXI.spine.core {
         MipMapNearestNearest = 9984,
         MipMapLinearNearest = 9985,
         MipMapNearestLinear = 9986,
-        MipMapLinearLinear = 9987,
+        MipMapLinearLinear = 9987
     }
     enum TextureWrap {
         MirroredRepeat = 33648,
         ClampToEdge = 33071,
-        Repeat = 10497,
+        Repeat = 10497
     }
     class TextureRegion {
         texture: PIXI.Texture;
@@ -978,7 +998,7 @@ declare module PIXI.spine.core {
         addTexture(name: string, texture: PIXI.Texture): TextureAtlasRegion;
         addTextureHash(textures: Map<PIXI.Texture>, stripExtension: boolean): void;
         addSpineAtlas(atlasText: string, textureLoader: (path: string, loaderFunction: (tex: PIXI.BaseTexture) => any) => any, callback: (obj: TextureAtlas) => any): void;
-        private load(atlasText, textureLoader, callback);
+        private load;
         findRegion(name: string): TextureAtlasRegion;
         dispose(): void;
     }
@@ -1051,9 +1071,9 @@ declare module PIXI.spine.core {
         private polygonIndicesPool;
         triangulate(verticesArray: ArrayLike<number>): Array<number>;
         decompose(verticesArray: Array<number>, triangles: Array<number>): Array<Array<number>>;
-        private static isConcave(index, vertexCount, vertices, indices);
-        private static positiveArea(p1x, p1y, p2x, p2y, p3x, p3y);
-        private static winding(p1x, p1y, p2x, p2y, p3x, p3y);
+        private static isConcave;
+        private static positiveArea;
+        private static winding;
     }
 }
 declare module PIXI.spine.core {
@@ -1134,6 +1154,7 @@ declare module PIXI.spine.core {
         static newShortArray(size: number): ArrayLike<number>;
         static toFloatArray(array: Array<number>): number[] | Float32Array;
         static toSinglePrecision(value: number): number;
+        static webkit602BugfixHelper(alpha: number, blend: MixBlend): void;
     }
     class DebugUtils {
         static logBones(skeleton: Skeleton): void;
@@ -1232,12 +1253,13 @@ declare module PIXI.spine {
     class SpineSprite extends PIXI.Sprite {
         region: core.TextureRegion;
     }
-    class SpineMesh extends PIXI.Mesh {
+    class SpineMesh extends PIXI.SimpleMesh {
         region: core.TextureRegion;
         constructor(texture: PIXI.Texture, vertices?: Float32Array, uvs?: Float32Array, indices?: Uint16Array, drawMode?: number);
     }
     class Spine extends PIXI.Container {
         static globalAutoUpdate: boolean;
+        static globalDelayLimit: number;
         tintRgb: ArrayLike<number>;
         spineData: core.SkeletonData;
         skeleton: core.Skeleton;
@@ -1245,12 +1267,14 @@ declare module PIXI.spine {
         state: core.AnimationState;
         slotContainers: Array<PIXI.Container>;
         tempClipContainers: Array<PIXI.Container>;
+        localDelayLimit: number;
         constructor(spineData: core.SkeletonData);
         autoUpdate: boolean;
         tint: number;
+        readonly delayLimit: number;
         update(dt: number): void;
-        private setSpriteRegion(attachment, sprite, region);
-        private setMeshRegion(attachment, mesh, region);
+        private setSpriteRegion;
+        private setMeshRegion;
         protected lastTime: number;
         autoUpdateTransform(): void;
         createSprite(slot: core.Slot, attachment: core.RegionAttachment, defName: string): SpineSprite;
@@ -1265,5 +1289,7 @@ declare module PIXI.spine {
         newGraphics(): PIXI.Graphics;
         newMesh(texture: PIXI.Texture, vertices?: Float32Array, uvs?: Float32Array, indices?: Uint16Array, drawMode?: number): SpineMesh;
         transformHack(): number;
+        hackAttachmentGroups(nameSuffix: string, group: any, outGroup: any): any[][];
+        destroy(options?: any): void;
     }
 }
