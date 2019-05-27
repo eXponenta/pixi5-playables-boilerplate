@@ -60,7 +60,7 @@ export class Playable implements IScene {
 		this.hammer = this.stage.getChildByPath<PIXI.Sprite>("Main/hammer-btn");
         this.continue = this.stage.getChildByPath<PIXI.Sprite>("Top/cont-btn");
         this.continue.on("pointerdown", ()=>{
-            alert("You ar click on button!!!\n");
+            alert("You clicked a button!!!!\n");
         })
         this.menu = this.stage.getChildByPath<PIXI.Container>("Menu");
 
