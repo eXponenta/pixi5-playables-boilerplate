@@ -1,10 +1,12 @@
 {
-  "name": "gamesfromhell",
-  "version": "1.0.0",
-  "description": "Three days for one game....I love it!",
-  "main": "index.js",
+  "name": "playables-boilerplate",
+  "version": "1.1.0",
+  "description": "PixiJS playable boilerplate!",
+  "main": "./src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+	"serve": "gulp",
+	"build": "gulp release",
+	"build-debug": "gulp debug"
   },
   "author": "eXponenta",
   "license": "UNLICENSED",
@@ -13,7 +15,7 @@
     "@types/js-cookie": "^2.2.1",
     "howler": "^2.1.1",
     "js-cookie": "^2.2.0",
-    "jszip": "^3.2.1"
+    "pixi.js": "^5.0.3"
   },
   "devDependencies": {
     "@types/howler": "^2.1.0",
@@ -31,7 +33,6 @@
     "gulp-typescript": "^5.0.0",
     "gulp-uglify": "^3.0.1",
     "gulp-util": "^3.0.8",
-    "pixi-console": "^2.0.2",
     "tsify": "^4.0.1",
     "typescript": "^3.3.3",
     "vinyl-buffer": "^1.0.1",
