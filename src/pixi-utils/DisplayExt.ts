@@ -1,8 +1,7 @@
+import {DisplayObject} from "pixi.js";
 
 export default function() {
-
-
-    PIXI.DisplayObject.prototype.replaceWithTransform = function(from: PIXI.DisplayObject) {
+	DisplayObject.prototype.replaceWithTransform = function(from: DisplayObject) {
         
         from.updateTransform();
         

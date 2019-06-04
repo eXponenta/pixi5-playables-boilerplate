@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js';
+
 export class KeyInputHandler {
 	static IsKeyDown: Array<boolean> = [];
 	static events: PIXI.utils.EventEmitter = new PIXI.utils.EventEmitter();

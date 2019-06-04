@@ -1,3 +1,5 @@
+import * as PIXI from "pixi.js";
+
 export default function() {
 	PIXI.Container.prototype.getChildByPath = function<T extends PIXI.DisplayObject>(path: string) {
 		if (!(this instanceof PIXI.Container) || this.children.length == 0) return undefined;

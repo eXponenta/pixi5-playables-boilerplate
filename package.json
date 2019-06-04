@@ -4,9 +4,9 @@
   "description": "PixiJS playable boilerplate!",
   "main": "./src/index.ts",
   "scripts": {
-	"serve": "gulp",
-	"build": "gulp release",
-	"build-debug": "gulp debug"
+    "serve": "gulp",
+    "build": "gulp release",
+    "build-debug": "gulp debug"
   },
   "author": "eXponenta",
   "license": "UNLICENSED",
@@ -15,6 +15,7 @@
     "@types/js-cookie": "^2.2.1",
     "howler": "^2.1.1",
     "js-cookie": "^2.2.0",
+    "pixi-spine": "^2.0.2",
     "pixi.js": "^5.0.3"
   },
   "devDependencies": {

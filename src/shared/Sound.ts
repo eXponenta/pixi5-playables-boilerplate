@@ -1,6 +1,7 @@
 import { Config } from "./Config";
 import Sounds from "../sounds.json";
 import { Howl } from "howler";
+import {IResourceDictionary, utils} from "pixi.js";
 
 export interface ISound {
 	name: string;
@@ -17,7 +18,7 @@ export interface IPlayingParams {
 export class SoundGrouper {
 	static managers: { [key: string]: SoundManager } = {};
 
-	static createManager(groupId: string, res: PIXI.IResourceDictionary) {
+	static createManager(groupId: string, res: IResourceDictionary) {
 
 		const manager = new SoundManager();
 		this.managers[groupId] = manager;
@@ -50,14 +51,14 @@ export class SoundGrouper {
 	}
 }
 
-export class SoundManager extends PIXI.utils.EventEmitter {
+export class SoundManager extends utils.EventEmitter {
 	sounds: { [id: string]: Howl } = {};
 
 	private _totalsPreloads = 0;
 	private _loaded = 0;
 	private _errors = 0;
 
-	preload(manifest: ISound[], res?: PIXI.IResourceDictionary) {
+	preload(manifest: ISound[], res?: IResourceDictionary) {
 		for (const etry of manifest) {
 			
 			let srcOrBlob = etry.src;

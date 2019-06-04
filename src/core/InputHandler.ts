@@ -1,4 +1,5 @@
 import { KeyInputHandler } from "../pixi-utils/InputHandler";
+import {Point, Sprite} from "pixi.js";
 
 enum Direction {
 	LEFT = "left",
@@ -18,7 +19,7 @@ const ACCEL_DELTA = 0.25;
 const MAX_TILT = 3;
 
 export class InputHandler {
-	private _axis: PIXI.Point = new PIXI.Point();
+	private _axis: Point = new Point();
 
 	mobileControlls: any;
 	useMobile: boolean = false;
@@ -64,7 +65,7 @@ export class InputHandler {
 
 		const keys = ["left", "right", "top", "bottom"];
 		for (let k of keys) {
-			const key = (this.mobileControlls as any)[k + "Button"] as PIXI.Sprite;
+			const key = (this.mobileControlls as any)[k + "Button"] as Sprite;
 			if (!key) continue;
 
 			key.on("touchstart", () => {
@@ -115,7 +116,7 @@ export class InputHandler {
 
 		const keys = ["left", "right", "top", "bottom"];
 		for (let k of keys) {
-			const key = (this.mobileControlls as any)[k + "Button"] as PIXI.Sprite;
+			const key = (this.mobileControlls as any)[k + "Button"] as Sprite;
 			if (!key) continue;
 
 			key.removeAllListeners("touchstart");

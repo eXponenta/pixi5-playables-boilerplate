@@ -1,3 +1,4 @@
+import { utils, Container, Ticker, Loader, Renderer} from 'pixi.js';
 
 export interface ApplicationOptions {
         autoStart?: boolean;
@@ -16,16 +17,16 @@ export interface ApplicationOptions {
         resizeTo?: Window | HTMLElement;
 }
 
-export class Application extends PIXI.utils.EventEmitter {
+export class Application extends utils.EventEmitter {
 
-    public renderer: PIXI.Renderer;
-    public ticker: PIXI.Ticker = new PIXI.Ticker();
-    public stage: PIXI.Container = new PIXI.Container();
-    public loader: PIXI.Loader = new PIXI.Loader();
+    public renderer: Renderer;
+    public ticker: Ticker = new Ticker();
+    public stage: Container = new Container();
+    public loader: Loader = new Loader();
   
     constructor(options: ApplicationOptions) {
         super();
-        this.renderer = new PIXI.Renderer(options);
+        this.renderer = new Renderer(options);
         this.renderer.plugins.interaction.moveWhenInside = true;
 
         if(options.autoStart)

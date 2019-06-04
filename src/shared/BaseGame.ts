@@ -4,6 +4,7 @@ import { InputHandler } from './../core/inputHandler';
 import { ITextBase } from './Multilang';
 import { SoundManager } from './Sound';
 import { IScene } from '../core/IScene';
+import * as PIXI from "pixi.js";
 
 export enum GameState {
 	PRE,

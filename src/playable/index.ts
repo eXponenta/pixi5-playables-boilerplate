@@ -3,7 +3,8 @@ import { StateBech } from "../core/StateBech";
 import { App } from "..";
 import { Assets } from "./Assets";
 import { Tween } from "@tweenjs/tween.js";
-import TWEEN from "@tweenjs/tween.js";
+import * as PIXI from "pixi.js";
+import {tiled as TILED } from "pixi.js";
 
 function JumpEase(steps = 2, fadeout = true) {
 	return (k: number) => {
@@ -54,7 +55,7 @@ export class Playable implements IScene {
 		const sp = l.resources[a.atlass.name].spritesheet;
 		sp.textures["bg.png"] = l.resources[a.bg.name].texture;
 
-		const stage = TiledOG.CreateStage(sp, l.resources[a.map.name].data);
+		const stage = TILED.CreateStage(sp, l.resources[a.map.name].data);
 		this.stage = stage;
 
 		this.hammer = this.stage.getChildByPath<PIXI.Sprite>("Main/hammer-btn");

@@ -18,21 +18,13 @@ const b64inliner = require("./gulp-inliner/b64inline");
 let paths = {
     entries: ["src/index.ts"],
     vendors:[
-        "./pixiv5/pixi.min.js",
         "./templates/release/index.html"
     ],
     vendors_dev:[
-        "./pixiv5/pixi.js",
-        "./pixiv5/pixi.js.map",
-        "./pixiv5/pixi-tiled.js",
-        "./pixiv5/pixi-spine.js",
-        "./pixiv5/pixi-tiled.js.map",
+        "./vendors/pixi-tiled.js.map",
         "./templates/debug/index.html"
     ],
-    concats: [
-        "./pixiv5/pixi-tiled.js",
-        "./pixiv5/pixi-spine.js"
-    ],
+    concats: [],
     res : "./res/**/*"
 };
 
@@ -150,7 +142,10 @@ const inline = ()=> {
     return gulp
             .src(["./dist/index.html"])
             //@ts-ignore
-            .pipe(inliner({base:"dist/"}))
+            .pipe(inliner({
+				base:"dist/",
+				ignore : ["mride.js"]
+			}))
             .pipe(rm("index.inline.html"))
             .pipe(gulp.dest("./dist"))
 }

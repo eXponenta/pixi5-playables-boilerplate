@@ -1,4 +1,5 @@
 import { decode85 } from "./Base85encoder";
+import {LoaderResource, Loader} from "pixi.js";
 
 export interface IPacket {
 	data: string;
@@ -24,10 +25,10 @@ const RAW_TEXT_TYPE = 666;
 const USE_BLOB_FOR_85 = false;
 
 //@ts-ignore
-const _orig = PIXI.LoaderResource.prototype._loadXhr;
+const _orig = LoaderResource.prototype._loadXhr;
 
 //@ts-ignore
-PIXI.LoaderResource.prototype._loadXhr = function() {
+LoaderResource.prototype._loadXhr = function() {
 	const type = this._determineXhrType();
 	if (this.loadType == RAW_TEXT_TYPE) {
 		let text: string = this.metadata.data || this.url;
@@ -35,9 +36,9 @@ PIXI.LoaderResource.prototype._loadXhr = function() {
 
 		if (type == "json") {
 			this.data = JSON.parse(unescape(text));
-			this.type = PIXI.LoaderResource.TYPE.JSON;
+			this.type = LoaderResource.TYPE.JSON;
 		} else {
-			this.type = PIXI.LoaderResource.TYPE.TEXT;
+			this.type = LoaderResource.TYPE.TEXT;
 			this.data = text;
 		}
 
@@ -60,7 +61,7 @@ const basePath = (path: string) => {
 	return path.substr(0, path.lastIndexOf("/") + 1);
 };
 
-export class InlineLoader extends PIXI.Loader {
+export class InlineLoader extends Loader {
 	constructor(public bundle: IBundle, baseUrl?: string, concurrency?: number) {
 		super(baseUrl, concurrency);
 	}
@@ -147,7 +148,7 @@ export class InlineLoader extends PIXI.Loader {
 		//spine
 		//this._resolveSpine(entry);
 
-		const parent: PIXI.LoaderResource = (entry.options || {}).parentResource;
+		const parent: LoaderResource = (entry.options || {}).parentResource;
 		if (!parent) return entry;
 
 		const pack = parent.metadata as IPacket;

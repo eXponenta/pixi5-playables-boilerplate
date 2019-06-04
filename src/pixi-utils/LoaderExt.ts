@@ -1,11 +1,12 @@
+import {Loader, LoaderResource, IResourceDictionary} from "pixi.js";
 
 export default function() {
-	PIXI.Loader.prototype.filter = function(func: (v: PIXI.LoaderResource) => boolean) {
+	Loader.prototype.filter = function(func: (v: LoaderResource) => boolean) {
 		if (!func) return [];
 
 		const ress = this.resources;
 
-		let ret: Array<PIXI.LoaderResource> = [];
+		let ret: Array<LoaderResource> = [];
 
 		let keys = Object.keys(ress);
 
@@ -18,10 +19,10 @@ export default function() {
 		return ret;
 	};
 
-	PIXI.Loader.prototype.loadAsync = async function() {
+	Loader.prototype.loadAsync = async function() {
 		return new Promise((res, rej) => {
-			this.onError.add( (e: any, l : PIXI.Loader, r: PIXI.IResourceDictionary) => rej(e) )
-			this.load( (l : PIXI.Loader, r: PIXI.IResourceDictionary) => res(r) );
+			this.onError.add( (e: any, l : Loader, r: IResourceDictionary) => rej(e) )
+			this.load( (l : Loader, r: IResourceDictionary) => res(r) );
 		});
 	} 
 }
