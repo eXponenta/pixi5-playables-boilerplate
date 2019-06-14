@@ -5,13 +5,10 @@
 
 import * as PIXI from 'pixi.js';
 
-//important for PIXI-SPINE and pixi-tiled etc
+//important for PIXI-SPINE
 // @ts-ignore
 window.PIXI = PIXI;
-// old style import for SPINE support
-require("./../node_modules/pixi-spine/bin/pixi-spine.js");
-//old style import for TILED support
-//require("./../vendors/pixi-tiled.js");
+import "pixi-spine"
 
 import { Application } from "./core/Application";
 import { IScene } from "./core/IScene";

@@ -10,6 +10,6 @@ export const Config = {
 	TextStyle : {
 		fontSize: 32,
 	},
-	BaseResDir:  '/* @echo RES_PATH */' || "./../res",
+	BaseResDir: "./../res", //'/* @echo RES_PATH */' || "./../res",
 	Translations: "/translations/manifest.json" //relative BaseResDir
 }
