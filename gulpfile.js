@@ -12,7 +12,6 @@ let del = require("del");
 let preprocess = require("gulp-preprocess");
 let inliner = require("gulp-inline");
 let rm = require("gulp-rename");
-let babelify = require("babelify");
 
 const b64inliner = require("./gulp-inliner/b64inline");
 
@@ -42,21 +41,18 @@ gulp.task("res-release", () => {
 });
 
 gulp.task("bundle-release", () => {
-	return (
-		brows_pipe
+	return brows_pipe
 			.bundle()
 			.pipe(source("bundle.js"))
 			.pipe(buffer())
 			//@ts-ignore
-			.pipe(
-				preprocess({
+			.pipe(preprocess({
 					context: {
 						RES_PATH: "./res"
 					}
 				})
 			)
-			.pipe(gulp.dest("dist"))
-	);
+			.pipe(gulp.dest("dist"));
 });
 
 gulp.task("bundle-release-nl", () => {
@@ -66,8 +62,7 @@ gulp.task("bundle-release-nl", () => {
 			.pipe(source("bundle.js"))
 			.pipe(buffer())
 			//@ts-ignore
-			.pipe(
-				preprocess({
+			.pipe(preprocess({
 					context: {
 						RES_PATH: "./res",
 						DEBUG: true
