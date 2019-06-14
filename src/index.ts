@@ -5,16 +5,13 @@
 
 import * as PIXI from 'pixi.js';
 
-import ActivateUtils from "./pixi-utils";
-	ActivateUtils();
-
 //important for PIXI-SPINE and pixi-tiled etc
 // @ts-ignore
 window.PIXI = PIXI;
 // old style import for SPINE support
 require("./../node_modules/pixi-spine/bin/pixi-spine.js");
 //old style import for TILED support
-require("./../vendors/pixi-tiled.js");
+//require("./../vendors/pixi-tiled.js");
 
 import { Application } from "./core/Application";
 import { IScene } from "./core/IScene";
@@ -22,7 +19,7 @@ import { Config } from './shared/Config';
 import { InlineLoader} from "./loader/InlineLoader";
 import { Playable } from './playable/index';
 
-import TWEEN from "@tweenjs/tween.js";
+import  TWEEN from "@tweenjs/tween.js";
 
 //how ignore it in DEBUG?
 import Resources from "./inline/resources";
@@ -86,7 +83,10 @@ export class App extends Application {
 		const game = new Playable(this);
 
 		const start = performance.now();
-		await game.preload(this.loader).loadAsync();
+		await new Promise((res)=>{
+			game.preload(this.loader).load(res);
+		});
+
 		console.log("loading:", performance.now() - start);
 
 		this.start(game);

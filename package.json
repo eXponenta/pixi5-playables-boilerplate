@@ -16,12 +16,16 @@
     "howler": "^2.1.1",
     "js-cookie": "^2.2.0",
     "pixi-spine": "^2.0.2",
-    "pixi.js": "^5.0.3"
+    "pixi.js": "^5.0.4",
+    "pixiv5-tiled": "^1.1.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "@types/howler": "^2.1.0",
     "@types/jszip": "^3.1.5",
     "@types/tween.js": "^17.2.0",
+    "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
@@ -32,7 +36,7 @@
     "gulp-rename": "^1.4.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^5.0.0",
-    "gulp-uglify": "^3.0.1",
+    "gulp-uglify-es": "^1.0.4",
     "gulp-util": "^3.0.8",
     "tsify": "^4.0.1",
     "typescript": "^3.3.3",

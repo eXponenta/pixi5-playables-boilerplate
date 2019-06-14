@@ -1,6 +1,5 @@
-import { App } from "..";
+import { App } from "./../index";
 import { StateBech } from "./StateBech";
-import { InputHandler } from './InputHandler';
 
 export interface IScene {
 	kind: "scene";

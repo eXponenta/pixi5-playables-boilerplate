@@ -1,6 +1,5 @@
 import { App } from "..";
 import { StateBech } from "../core/StateBech";
-import { InputHandler } from './../core/inputHandler';
 import { ITextBase } from './Multilang';
 import { SoundManager } from './Sound';
 import { IScene } from '../core/IScene';
@@ -23,7 +22,6 @@ export class BaseGame implements IScene {
 	loader: PIXI.Loader;
 	app: App;
 	gameState: StateBech<GameState> = new StateBech();
-	input: InputHandler;
 
 	protected _isPaused: boolean = false;
 
@@ -44,20 +42,12 @@ export class BaseGame implements IScene {
 	}
 
 	pause(soft: boolean): void {
-		if(this.input){
-			this.input.unbindInput();
-		}
 	}
 
 	resume(soft: boolean): void {
-		if(this.input)
-			this.input.bindInput();
 	}
 
 	stop(): void {
-		if(this.input){
-			this.input.unbindInput();
-		}
 
 		for(let res in this.loader.resources) {
 
@@ -80,7 +70,5 @@ export class BaseGame implements IScene {
 
 
 	update(ticker: PIXI.ticker.Ticker): void{
-		if(this.input)
-			this.input.update();
 	}
 }

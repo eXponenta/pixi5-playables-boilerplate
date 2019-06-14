@@ -1,10 +1,13 @@
 import { IScene } from "../core/IScene";
 import { StateBech } from "../core/StateBech";
-import { App } from "..";
+import { App } from "../index";
 import { Assets } from "./Assets";
 import { Tween } from "@tweenjs/tween.js";
 import * as PIXI from "pixi.js";
-import {tiled as TILED } from "pixi.js";
+import * as TILED from "pixiv5-tiled";
+
+// @ts-ignore
+window.tiled = TILED;
 
 function JumpEase(steps = 2, fadeout = true) {
 	return (k: number) => {
@@ -13,11 +16,11 @@ function JumpEase(steps = 2, fadeout = true) {
 }
 
 interface StairPairs {
-    btn : PIXI.Sprite;
-    bg: PIXI.Sprite;
+	btn: PIXI.Sprite;
+	bg: PIXI.Sprite;
 }
 class Stair extends PIXI.Sprite {
-    initialY : number = 0;
+	initialY: number = 0;
 }
 
 export class Playable implements IScene {
@@ -28,12 +31,12 @@ export class Playable implements IScene {
 	app: App;
 	gameState: StateBech<any>;
 	hammer: PIXI.Sprite;
-    continue: PIXI.Sprite;
-    menu : PIXI.Container;
-    ok: PIXI.Sprite;
-    stairButtons: StairPairs[] = [];
-    stairs : Stair[] = [];
-    oldStair: Stair;
+	continue: PIXI.Sprite;
+	menu: PIXI.Container;
+	ok: PIXI.Sprite;
+	stairButtons: StairPairs[] = [];
+	stairs: Stair[] = [];
+	oldStair: Stair;
 
 	constructor(app: App) {
 		this.app = app;
@@ -53,113 +56,116 @@ export class Playable implements IScene {
 		const l = this.loader;
 		const a = Assets.Assets;
 		const sp = l.resources[a.atlass.name].spritesheet;
-		sp.textures["bg.png"] = l.resources[a.bg.name].texture;
+		const ms = new TILED.MultiSpritesheet([sp]);
+		ms.addTexture(l.resources[a.bg.name].texture, "bg.png");
 
-		const stage = TILED.CreateStage(sp, l.resources[a.map.name].data);
+		const stage = TILED.CreateStage(ms, l.resources[a.map.name].data);
 		this.stage = stage;
 
-		this.hammer = this.stage.getChildByPath<PIXI.Sprite>("Main/hammer-btn");
-        this.continue = this.stage.getChildByPath<PIXI.Sprite>("Top/cont-btn");
-        this.continue.on("pointerdown", ()=>{
-            alert("You clicked a button!!!!\n");
-        })
-        this.menu = this.stage.getChildByPath<PIXI.Container>("Menu");
+		this.hammer = stage.getChildByPath<PIXI.Sprite>("Main/hammer-btn");
+		this.continue = stage.getChildByPath<PIXI.Sprite>("Top/cont-btn");
 
-        this.ok = this.menu.getChildByPath<PIXI.Sprite>("ok-btn");
-        this.ok.x += this.ok.width * 0.5;
-        this.ok.anchor.x = 0.5;
-        this.ok.visible = false;
-        this.ok.on("pointerdown", this.compliteAnim, this);
-         
-        //--- Stair buttons
-         for(let i = 0; i < 3; i ++ ) {
-            const btn = this.menu.getChildByPath<PIXI.Sprite>(`stair-${i}-btn`);
-            const bg = this.menu.getChildByPath<PIXI.Sprite>(`stair-${i}-btn:selected`);
-            btn.x += btn.width * 0.5;
-            btn.anchor.x = 0.5;
-            const index = i;
-            btn.on("pointerdown", ()=>{
-                this.selectStair(index);
-            })
-            this.stairButtons.push({btn, bg});
-        }
 
-        //--- Stair
+		this.continue.on("pointerdown", () => {
+			alert("You clicked a button!!!!\n");
+		})
+		this.menu = stage.getChildByPath<PIXI.Container>("Menu");
 
-        this.oldStair = this.stage.getChildByPath<Stair>("Main/stair-old");
-        this.oldStair.initialY = this.oldStair.y;
+		this.ok = this.menu.getChildByPath<PIXI.Sprite>("ok-btn");
+		this.ok.x += this.ok.width * 0.5;
+		this.ok.anchor.x = 0.5;
+		this.ok.visible = false;
+		this.ok.on("pointerdown", this.compliteAnim, this);
 
-        for(let i = 0; i < 3; i++) {
-            this.stairs[i] = this.stage.getChildByPath<Stair>(`Main/stair-new-${i}`);
-            this.stairs[i].initialY = this.stairs[i].y;
-        }
+		//--- Stair buttons
+		for (let i = 0; i < 3; i++) {
+			const btn = this.menu.getChildByPath<PIXI.Sprite>(`stair-${i}-btn`);
+			const bg = this.menu.getChildByPath<PIXI.Sprite>(`stair-${i}-btn:selected`);
+			btn.x += btn.width * 0.5;
+			btn.anchor.x = 0.5;
+			const index = i;
+			btn.on("pointerdown", () => {
+				this.selectStair(index);
+			})
+			this.stairButtons.push({ btn, bg });
+		}
+
+		//--- Stair
+
+		this.oldStair = stage.getChildByPath<Stair>("Main/stair-old");
+		this.oldStair.initialY = this.oldStair.y;
+
+		for (let i = 0; i < 3; i++) {
+			this.stairs[i] = stage.getChildByPath<Stair>(`Main/stair-new-${i}`);
+			this.stairs[i].initialY = this.stairs[i].y;
+		}
 
 	}
 
 	start(): void {
-        
-        const ht = this.hammerAnim();
-        this.contAnim();
-        
-        this.hammer.on("pointerdown", ()=>{
-            ht.stop();
-            new Tween(this.hammer).to({alpha: 0}, 100).onComplete(()=>{
-                this.hammer.visible = false;
-            }).start();
-            this.menuAnim();
-        });       
-        
-    }
-    
-    private selectStair(index: number) {
-        this.stairButtons.forEach((p, k)=>{
-            p.bg.visible = k === index;
-        });
-        if(!this.ok.visible){
-            this.ok.visible = true;
-            this.ok.alpha = 0;
-            new Tween(this.ok).to({alpha: 1}, 100).start();
-        }
-        new Tween(this.ok).to({x : this.stairButtons[index].btn.x}, 100).start();
-        
-        const ns = this.stairs[index];
-        ns.visible = true;
-        ns.alpha = 0;
-        ns.y = ns.initialY -  100;
-        const next = 
-                new Tween(ns)
-                .to({alpha: 1, y : ns.initialY}, 300);
 
-        new Tween(this.oldStair)
-            .to({alpha: 0, y : this.oldStair.y - 100}, 300)
-            .chain(next)
-            .onComplete(()=>{
-                this.oldStair = ns;
-            })
-            .start();
-    }
+		const ht = this.hammerAnim();
+		this.contAnim();
 
-    private compliteAnim(){
-        
-        const final = this.stage.getChildByPath<PIXI.Container>("Final");
-        final.visible = true;
-        final.alpha = 0;
-        const ovtween = new Tween(final).to({
-            alpha: 1
-        }, 300)
-        .delay(300);
-        
-        const oldanim = new Tween(this.oldStair).to({y : this.oldStair.initialY + 100}, 100);
-        return new Tween(this.menu).to({y: -100, alpha: 0}, 100)
-                    .chain(oldanim,  ovtween)
-                    .start();
-    }
+		this.hammer.on("pointerdown", () => {
+			ht.stop();
+			new Tween(this.hammer).to({ alpha: 0 }, 100).onComplete(() => {
+				this.hammer.visible = false;
+			}).start();
+			this.menuAnim();
+		});
 
-    private menuAnim() {
-        this.menu.visible = true;
-        this.menu.y -= 100;
-        new Tween(this.menu).to({y : 0}, 100).start();
-    }
+	}
+
+	private selectStair(index: number) {
+		this.stairButtons.forEach((p, k) => {
+			p.bg.visible = k === index;
+		});
+		if (!this.ok.visible) {
+			this.ok.visible = true;
+			this.ok.alpha = 0;
+			new Tween(this.ok).to({ alpha: 1 }, 100).start();
+		}
+		new Tween(this.ok).to({ x: this.stairButtons[index].btn.x }, 100).start();
+
+		const ns = this.stairs[index];
+		ns.visible = true;
+		ns.alpha = 0;
+		ns.y = ns.initialY - 100;
+		const next =
+			new Tween(ns)
+				.to({ alpha: 1, y: ns.initialY }, 300);
+
+		new Tween(this.oldStair)
+			.to({ alpha: 0, y: this.oldStair.y - 100 }, 300)
+			.chain(next)
+			.onComplete(() => {
+				this.oldStair = ns;
+			})
+			.start();
+	}
+
+	private compliteAnim() {
+
+		const final = this.stage.getChildByPath<PIXI.Container>("Final");
+		final.visible = true;
+		final.alpha = 0;
+		const ovtween = new Tween(final).to({
+			alpha: 1
+		}, 300)
+			.delay(300);
+
+		const oldanim = new Tween(this.oldStair).to({ y: this.oldStair.initialY + 100 }, 100);
+		return new Tween(this.menu).to({ y: -100, alpha: 0 }, 100)
+			.chain(oldanim, ovtween)
+			.start();
+	}
+
+	private menuAnim() {
+		this.menu.visible = true;
+		this.menu.y -= 100;
+		new Tween(this.menu).to({ y: 0 }, 100).start();
+	}
 
 	private contAnim() {
 		this.continue.x += this.continue.width * 0.5;
@@ -168,7 +174,7 @@ export class Playable implements IScene {
 
 		const se = JumpEase(1, false);
 		const re = JumpEase(2, false);
-		const tween = new Tween({val: 0})
+		const tween = new Tween({ val: 0 })
 			.to(
 				{
 					val: 1
@@ -214,11 +220,11 @@ export class Playable implements IScene {
 		}, 3000);
 		return tween;
 	}
-	resume(soft: boolean): void {}
+	resume(soft: boolean): void { }
 
-	pause(soft: boolean): void {}
+	pause(soft: boolean): void { }
 
-	stop(): void {}
+	stop(): void { }
 
-	update(ticker: PIXI.ticker.Ticker): void {}
+	update(ticker: PIXI.ticker.Ticker): void { }
 }

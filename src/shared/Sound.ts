@@ -1,5 +1,5 @@
 import { Config } from "./Config";
-import Sounds from "../sounds.json";
+import * as Sounds from "../sounds.json";
 import { Howl } from "howler";
 import {IResourceDictionary, utils} from "pixi.js";
 
