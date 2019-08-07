@@ -1,0 +1,167 @@
+{"frames": {
+
+"rover_0009.png":
+{
+	"frame": {"x":234,"y":146,"w":40,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":43,"y":19,"w":40,"h":74},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0010.png":
+{
+	"frame": {"x":235,"y":70,"w":48,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":39,"y":19,"w":48,"h":74},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0011.png":
+{
+	"frame": {"x":1,"y":217,"w":56,"h":74},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":19,"w":56,"h":74},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0012.png":
+{
+	"frame": {"x":1,"y":143,"w":62,"h":72},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":20,"w":62,"h":72},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0013.png":
+{
+	"frame": {"x":1,"y":70,"w":67,"h":71},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":21,"w":67,"h":71},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0014.png":
+{
+	"frame": {"x":1,"y":1,"w":72,"h":67},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":24,"w":72,"h":67},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0015.png":
+{
+	"frame": {"x":75,"y":1,"w":77,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":27,"w":77,"h":62},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0016.png":
+{
+	"frame": {"x":154,"y":1,"w":79,"h":57},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":29,"w":79,"h":57},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0017.png":
+{
+	"frame": {"x":154,"y":60,"w":79,"h":51},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":32,"w":79,"h":51},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0018.png":
+{
+	"frame": {"x":154,"y":113,"w":78,"h":45},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":35,"w":78,"h":45},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0019.png":
+{
+	"frame": {"x":70,"y":123,"w":80,"h":47},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":36,"w":80,"h":47},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0020.png":
+{
+	"frame": {"x":65,"y":172,"w":80,"h":51},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":35,"w":80,"h":51},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0021.png":
+{
+	"frame": {"x":75,"y":65,"w":77,"h":56},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":32,"w":77,"h":56},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0022.png":
+{
+	"frame": {"x":59,"y":225,"w":72,"h":60},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":29,"w":72,"h":60},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0023.png":
+{
+	"frame": {"x":152,"y":160,"w":67,"h":63},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":27,"w":67,"h":63},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0024.png":
+{
+	"frame": {"x":133,"y":225,"w":62,"h":65},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":33,"y":25,"w":62,"h":65},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0025.png":
+{
+	"frame": {"x":235,"y":1,"w":55,"h":67},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":24,"w":55,"h":67},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0026.png":
+{
+	"frame": {"x":197,"y":225,"w":48,"h":66},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":41,"y":24,"w":48,"h":66},
+	"sourceSize": {"w":128,"h":128}
+},
+"rover_0027.png":
+{
+	"frame": {"x":247,"y":222,"w":40,"h":65},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":45,"y":25,"w":40,"h":65},
+	"sourceSize": {"w":128,"h":128}
+}},
+"animations": {
+	"rover": ["rover_0009.png","rover_0010.png","rover_0011.png","rover_0012.png","rover_0013.png","rover_0014.png","rover_0015.png","rover_0016.png","rover_0017.png","rover_0018.png","rover_0019.png","rover_0020.png","rover_0021.png","rover_0022.png","rover_0023.png","rover_0024.png","rover_0025.png","rover_0026.png","rover_0027.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "rover.png",
+	"format": "RGBA8888",
+	"size": {"w":292,"h":292},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:b37640c3c63c304a6bd7acb71579a336:0771a74abba126dda91e7e831fd0fcd2:fd8249bd40e329906ee56cf9795a8e5e$"
+}
+}

@@ -61,7 +61,7 @@ export class Application extends utils.EventEmitter {
         this.ticker.stop();
     }
 
-    destory(params = {children:false}) {
+    destory(params = {children : false}) {
         this.stage.destroy(params);
         this.ticker.destroy();
         this.renderer.destroy(true);

@@ -1,14 +1,11 @@
-/**
- * @author Konstantin (eXponenta) Timoshenko ( rondo.devil@gmail.com )
- * @description Index file of pixi-tiled-boilerplate. Used pixi-spine and pixi-tiled as legacy-styled dependencies
- */
-
 import * as PIXI from 'pixi.js';
 
-//important for PIXI-SPINE
-// @ts-ignore
-window.PIXI = PIXI;
-import "pixi-spine"
+//allow inspect
+//@ts-ignore
+
+// @ifdef DEBUG
+window.__PIXI_INSPECTOR_GLOBAL_HOOK__ && window.__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI: PIXI });
+// @endif
 
 import { Application } from "./core/Application";
 import { IScene } from "./core/IScene";

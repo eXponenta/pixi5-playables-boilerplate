@@ -6,6 +6,7 @@ import { Tween } from "@tweenjs/tween.js";
 import * as PIXI from "pixi.js";
 import * as TILED from "pixiv5-tiled";
 
+TILED.Inject(PIXI);
 // @ts-ignore
 window.tiled = TILED;
 
@@ -44,6 +45,7 @@ export class Playable implements IScene {
 
 	preload(loader?: PIXI.Loader): PIXI.Loader {
 		this.loader = loader;
+		//@ts-ignore
 		const assets = Object.values(Assets.Assets).map(e => {
 			e.url = Assets.BaseDir + e.url;
 			return e;

@@ -1,7 +1,7 @@
 {
-  "name": "playables-boilerplate",
-  "version": "1.1.0",
-  "description": "PixiJS playable boilerplate!",
+  "name": "stellar-playable",
+  "version": "0.0.1",
+  "description": "Stellar!",
   "main": "./src/index.ts",
   "scripts": {
     "serve": "gulp",
@@ -12,16 +12,12 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@tweenjs/tween.js": "^17.3.0",
-    "@types/js-cookie": "^2.2.1",
     "howler": "^2.1.1",
-    "js-cookie": "^2.2.0",
-    "pixi-spine": "^2.0.2",
-    "pixi.js": "^5.0.4",
-    "pixiv5-tiled": "^1.1.1"
+    "pixi.js": "^5.1.1",
+    "pixiv5-tiled": "^1.1.4"
   },
   "devDependencies": {
     "@types/howler": "^2.1.0",
-    "@types/jszip": "^3.1.5",
     "@types/tween.js": "^17.2.0",
     "browserify": "^16.2.3",
     "del": "^3.0.0",
